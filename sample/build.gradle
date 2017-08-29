@@ -27,7 +27,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.github.ipcjs:BaiduMapSDK:g01_0.0.1'
+//    compile 'com.github.ipcjs:BaiduMapSDK:g01_0.0.1'
+//    compile 'com.github.ipcjs.BaiduMapSDK:map:v0.0.2'
 
     implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
