@@ -9,6 +9,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Class<LocationClient> clz = LocationClient.class;
+//        Class<LocationClient> locationClientClass = LocationClient.class;
+//        MapView mapView = new MapView(this);
+        //        Class<LocationClient> clz = LocationClient.class;
     }
 }
