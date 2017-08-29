@@ -1,1 +1,4 @@
 apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.github.ipcjs.BaiduMapSDK'
+version = '0.1.0'
