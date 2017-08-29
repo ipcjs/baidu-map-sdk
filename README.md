@@ -17,8 +17,15 @@
 ### 自定义下载的12宫格和module的对应关系
 
 - 基础定位、离线定位、室内定位、全量定位 => `location-base`
-- 基础地图 => `map`
-- 骑行导航 => `bikenavi`
+- 基础地图 => `map`（依赖`base`）
+- 骑行导航 => `bikenavi`（依赖`base`）
 - 检索功能、LBS云检索、计算工具、周边雷达 => `base`
 - 驾车导航 => `navi`
 - 全景图 => `panorama`
+
+### 百度地图SDK及其版本和module的对应关系
+
+- 定位SDK v7.2.0 => `location-base`
+- 地图SDK v4.4.1 => `base`/`map`/`bikennavi`
+- 导航SDK v3.3.1 => `navi`
+- 全景SDK v2.6.0 => `panorama`
