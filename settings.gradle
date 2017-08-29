@@ -1,4 +1,4 @@
-include ':app', ':sample'
+include ':app'
 include ':location-base'
 include ':base', ':map', ':bikenavi'
 include ':navi', ':panorama'
