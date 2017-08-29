@@ -23,10 +23,11 @@ android {
     }
 
 }
+def baiduMapSdkVersion = 'v1.0.0'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.github.ipcjs.BaiduMapSDK:location-base:v0.0.1'
-    compile 'com.github.ipcjs.BaiduMapSDK:map:v0.0.1'
-    compile 'com.github.ipcjs.BaiduMapSDK:panorama:v0.0.1'
+    compile "com.github.ipcjs.BaiduMapSDK:location-base:${baiduMapSdkVersion}"
+    compile "com.github.ipcjs.BaiduMapSDK:map:${baiduMapSdkVersion}"
+    compile "com.github.ipcjs.BaiduMapSDK:panorama:${baiduMapSdkVersion}"
 }
