@@ -1,3 +1,4 @@
+[![Release](https://jitpack.io/v/User/Repo.svg)] (https://jitpack.io/#ipcjs/baidu-map-sdk)
 
 ## 文件结构
 
@@ -29,3 +30,21 @@
 - 地图SDK v4.4.1 => `base`/`map`/`bikennavi`
 - 导航SDK v3.3.1 => `navi`
 - 全景SDK v2.6.0 => `panorama`
+
+### 引入
+
+```groovy
+dependencies {
+    // 引入已有的组合, 包含的模块详见: https://github.com/ipcjs/baidu-map-sdk/tree/g01
+    compile 'com.github.ipcjs:baidu-map-sdk:g01_1.0.3'
+    
+    // 分别引入模块, 注意: BaiduLBS_Android.jar文件需要自己去官网下载
+    def baiduMapSdkVersion = 'v1.0.3'
+    compile "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
+    compile "com.github.ipcjs.baidu-map-sdk:base:${baiduMapSdkVersion}"
+    compile "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
+    compile "com.github.ipcjs.baidu-map-sdk:bikenavi:${baiduMapSdkVersion}"
+    compile "com.github.ipcjs.baidu-map-sdk:navi:${baiduMapSdkVersion}"
+    compile "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
+}
+```
