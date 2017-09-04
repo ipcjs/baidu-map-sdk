@@ -13,7 +13,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        manifestPlaceholders = [
+                BAIDU_MAP_KEY: "CM0vTQnVNOgFwGyl13bncPT6GuTTyHkr",
+        ]
     }
 
     buildTypes {
