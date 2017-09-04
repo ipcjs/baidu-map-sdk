@@ -1,4 +1,4 @@
-[![Release](https://jitpack.io/v/User/Repo.svg)] (https://jitpack.io/#ipcjs/baidu-map-sdk)
+[![Release](https://jitpack.io/v/ipcjs/baidu-map-sdk.svg)] (https://jitpack.io/#ipcjs/baidu-map-sdk)
 
 ## 文件结构
 
