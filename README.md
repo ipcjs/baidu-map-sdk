@@ -36,7 +36,7 @@
 ```groovy
 dependencies {
     // 引入已有的组合, 包含的模块详见: https://github.com/ipcjs/baidu-map-sdk/tree/g01
-    compile 'com.github.ipcjs:baidu-map-sdk:g01_1.0.3'
+    compile 'com.github.ipcjs:baidu-map-sdk:g01_1.0.4'
     
     // 分别引入模块, 注意: BaiduLBS_Android.jar文件需要自己去官网下载
     def baiduMapSdkVersion = 'v1.0.3'
