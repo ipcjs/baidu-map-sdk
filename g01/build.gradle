@@ -21,7 +21,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    sourceSets {
+        main {
+//            manifest.srcFile 'AndroidManifest.xml'
+//            jniLibs.srcDir 'libs'
+            assets.srcDir 'assets'
+        }
+    }
 }
 def baiduMapSdkVersion = 'v1.0.3'
 
