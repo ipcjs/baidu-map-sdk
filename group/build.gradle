@@ -38,4 +38,5 @@ dependencies {
     compile "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
+    compile "com.github.ipcjs.baidu-map-sdk:navi:${baiduMapSdkVersion}"
 }
