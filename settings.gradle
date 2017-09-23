@@ -1,6 +1,7 @@
 include ':MapDemo'
 include ':BikeNaviDemo'
 include ':LocDemo'
+include ':PanoramaDemo'
 include ':location'
 include ':base', ':map', ':bikenavi'
 include ':navi', ':panorama'
