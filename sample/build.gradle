@@ -29,7 +29,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':g01')
+    implementation project(':group')
 //    compile 'com.github.ipcjs:baidu-map-sdk:g01_1.1.0'
 
     implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
