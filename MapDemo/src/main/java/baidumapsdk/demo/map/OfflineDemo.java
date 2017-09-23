@@ -63,8 +63,9 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
         ArrayList<MKOLSearchRecord> records1 = mOffline.getHotCityList();
         if (records1 != null) {
             for (MKOLSearchRecord r : records1) {
+                //V4.5.0起，保证数据不溢出，使用long型保存数据包大小结果
                 hotCities.add(r.cityName + "(" + r.cityID + ")" + "   --"
-                        + this.formatDataSize(r.size));
+                        + this.formatDataSize(r.dataSize));
                 hotCityNames.add(r.cityName);
             }
         }
@@ -84,8 +85,9 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
         ArrayList<MKOLSearchRecord> records2 = mOffline.getOfflineCityList();
         if (records1 != null) {
             for (MKOLSearchRecord r : records2) {
+                //V4.5.0起，保证数据不溢出，使用long型保存数据包大小结果
                 allCities.add(r.cityName + "(" + r.cityID + ")" + "   --"
-                        + this.formatDataSize(r.size));
+                        + this.formatDataSize(r.dataSize));
                 allCityNames.add(r.cityName);
             }
         }
@@ -220,7 +222,10 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
         super.onResume();
     }
 
-    public String formatDataSize(int size) {
+    /**
+     * V4.5.0起，保证数据不溢出，使用long型保存数据包大小结果
+    */
+    public String formatDataSize(long size) {
         String ret = "";
         if (size < (1024 * 1024)) {
             ret = String.format("%dK", size / 1024);

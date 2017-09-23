@@ -36,8 +36,10 @@ public class BaseMapDemo extends Activity {
     private static final int OPEN_ID = 0;
     private static final int CLOSE_ID = 1;
     //用于设置个性化地图的样式文件
-    // 提供三种样式模板："custom_config_blue.txt"，"custom_config_dark.txt"，"custom_config_midnightblue.txt"
-    private static String PATH = "custom_config_dark.txt";
+    // 提供4种样式模板:
+    // "custom_config_blue.json"，"custom_config_dark.json"，
+    // "custom_config_midnightblue.json","custom_config_icon_control.json"
+    private static String PATH = "custom_config_dark.json";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,17 @@ public class BaseMapDemo extends Activity {
         }
         builder.target(center).zoom(zoom);
 
+
+        /**
+         * MapView (TextureMapView)的
+         * {@link MapView.setCustomMapStylePath(String customMapStylePath)}
+         * 方法一定要在MapView(TextureMapView)创建之前调用。
+         * 如果是setContentView方法通过布局加载MapView(TextureMapView), 那么一定要放置在
+         * MapView.setCustomMapStylePath方法之后执行，否则个性化地图不会显示
+         */
         setMapCustomFile(this, PATH);
+
+
         mMapView = new MapView(this, new BaiduMapOptions());
         initView(this);
         setContentView(layout);
