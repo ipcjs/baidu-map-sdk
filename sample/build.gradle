@@ -32,6 +32,7 @@ dependencies {
     implementation project(':g01')
 //    compile 'com.github.ipcjs:baidu-map-sdk:g01_1.1.0'
 
+    implementation 'com.github.ipcjs:android-universal-explorer:1.0.1'
     implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
