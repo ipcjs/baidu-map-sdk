@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.github.ipcjs.explorer.ExplorerFragment;
 
 /**
