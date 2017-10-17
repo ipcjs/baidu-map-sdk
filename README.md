@@ -69,7 +69,8 @@ dependencies {
     compile "com.github.ipcjs.baidu-map-sdk:bikenavi:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:navi:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
-    // utils模块, 包含点聚合功能
+    
+    // utils模块, 包含点聚合功能; 注意: 需要手动引入该模块依赖的BaiduLBS_Android.jar和support-v4包
     compile "com.github.ipcjs.baidu-map-sdk:utils:${baiduMapSdkVersion}"
 }
 ```
