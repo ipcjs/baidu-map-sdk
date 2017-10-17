@@ -69,5 +69,7 @@ dependencies {
     compile "com.github.ipcjs.baidu-map-sdk:bikenavi:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:navi:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
+    // utils模块, 包含点聚合功能
+    compile "com.github.ipcjs.baidu-map-sdk:utils:${baiduMapSdkVersion}"
 }
 ```
