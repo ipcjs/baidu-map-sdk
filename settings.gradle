@@ -1,4 +1,4 @@
-include ':MapDemo'
+include ':MapDemo', ':utils'
 include ':BikeNaviDemo'
 include ':LocDemo'
 include ':PanoramaDemo'

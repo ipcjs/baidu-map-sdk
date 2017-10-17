@@ -54,4 +54,5 @@ dependencies {
     compile "com.android.support:appcompat-v7:${rootProject.supportVersion}"
     compile project(':map')
     compile project(':location')
+    compile project(':utils')
 }

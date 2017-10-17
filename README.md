@@ -28,6 +28,7 @@
 
 - 定位SDK => `location`
 - 地图SDK => `base`/`map`/`bikennavi`
+    - 点聚合等功能 => `utils`
 - 导航SDK => `navi`
 - 全景SDK => `panorama`
 
@@ -43,10 +44,12 @@
 
 #### module版本号和百度地图SDK版本号的对应关系
 
-| 库module |    g01    |     g02     | 定位SDK |  地图SDK   | 导航SDK | 全景SDK |
-|----------|-----------|-------------|---------|------------|---------|---------|
-| v1.0.3   | g01_1.0.4 | --          | v7.2.0  | v4.4.1     | v3.3.1  | v2.6.0  |
-| v1.1.0   | g01_1.1.0 | `g02_1.1.1` | v7.2.0  | **v4.5.0** | v3.3.1  | v2.6.0  |
+| 库module |    g01    |     g02     | 定位SDK |  地图SDK   | 导航SDK | 全景SDK |      说明     |
+|----------|-----------|-------------|---------|------------|---------|---------|---------------|
+| v1.0.3   | g01_1.0.4 | --          | v7.2.0  | v4.4.1     | v3.3.1  | v2.6.0  | 建立项目      |
+| v1.1.0   | g01_1.1.0 | `g02_1.1.1` | v7.2.0  | **v4.5.0** | v3.3.1  | v2.6.0  | 升级地图SDK   |
+| v1.1.1   | --        | --          | v7.2.0  | v4.5.0     | v3.3.1  | v2.6.0  | 增加utils模块 |
+
 
 ### 引入
 
@@ -59,7 +62,7 @@ dependencies {
     compile 'com.github.ipcjs:baidu-map-sdk:g02_1.1.1'
     
     // 分别引入库module, 注意: BaiduLBS_Android.jar文件需要自己去官网下载
-    def baiduMapSdkVersion = 'v1.1.0'
+    def baiduMapSdkVersion = 'v1.1.1'
     compile "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:base:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
