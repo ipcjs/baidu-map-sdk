@@ -39,3 +39,14 @@ dependencies {
     compile "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
 }
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+task javadocJar(type: Jar) {
+    from '../libs/doc/panorama', '../libs/doc/navi', '../libs/doc/location', '../libs/doc/map'
+    classifier = 'javadoc'
+}
+artifacts {
+    archives javadocJar
+}
+
