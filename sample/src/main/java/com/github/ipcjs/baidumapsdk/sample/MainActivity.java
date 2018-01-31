@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         return option;
     }
 
-    public class MyLocationListener extends BDAbstractLocationListener implements BDLocationListener {
+    public class MyLocationListener extends BDAbstractLocationListener {
 
         @Override
         public void onReceiveLocation(BDLocation location) {

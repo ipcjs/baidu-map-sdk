@@ -31,7 +31,7 @@ android {
         }
     }
 }
-def baiduMapSdkVersion = 'v1.1.0'
+def baiduMapSdkVersion = 'v1.2.0'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
