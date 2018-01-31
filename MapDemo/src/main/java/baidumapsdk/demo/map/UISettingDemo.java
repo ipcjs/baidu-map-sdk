@@ -40,7 +40,7 @@ public class UISettingDemo extends Activity {
     private CheckBox cbOverlook;
     private CheckBox cbRotate;
     private CheckBox cbScroll;
-
+    private CheckBox cbCompass;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +54,7 @@ public class UISettingDemo extends Activity {
         cbScroll = (CheckBox) findViewById(R.id.scroll);
         cbOverlook = (CheckBox) findViewById(R.id.overlook);
         cbRotate = (CheckBox) findViewById(R.id.rotate);
+        cbCompass=(CheckBox)findViewById(R.id.compass);
         MapStatus ms = new MapStatus.Builder().build();
         MapStatusUpdate u = MapStatusUpdateFactory.newMapStatus(ms);
         mBaiduMap.animateMapStatus(u, 1000);

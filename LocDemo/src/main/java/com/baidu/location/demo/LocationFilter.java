@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import com.baidu.baidulocationdemo.R;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.service.LocationService;
 import com.baidu.location.service.Utils;
@@ -17,6 +16,7 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +39,7 @@ public class LocationFilter extends Activity {
 	private Button reset;
 	private LocationService locService;
 	private LinkedList<LocationEntity> locationList = new LinkedList<LocationEntity>(); // 存放历史定位结果的链表，最大存放当前结果的前5次定位结果
-	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +87,8 @@ public class LocationFilter extends Activity {
 	 * 平滑策略代码实现方法，主要通过对新定位和历史定位结果进行速度评分，
 	 * 来判断新定位结果的抖动幅度，如果超过经验值，则判定为过大抖动，进行平滑处理,若速度过快，
 	 * 则推测有可能是由于运动速度本身造成的，则不进行低速平滑处理 ╭(●｀∀´●)╯
-	 * 
-	 * @param BDLocation
+	 *
+	 * @param location
 	 * @return Bundle
 	 */
 	private Bundle Algorithm(BDLocation location) {
@@ -149,7 +149,7 @@ public class LocationFilter extends Activity {
 					// 构建Marker图标
 					BitmapDescriptor bitmap = null;
 					if (iscal == 0) {
-						bitmap = BitmapDescriptorFactory.fromResource(R.drawable.huaji); // 非推算结果
+						bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_openmap_mark); // 非推算结果
 					} else {
 						bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_openmap_focuse_mark); // 推算结果
 					}
@@ -164,14 +164,12 @@ public class LocationFilter extends Activity {
 				// TODO: handle exception
 			}
 		}
-
 	};
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
-//		WriteLog.getInstance().close();
 		locService.unregisterListener(listener);
 		locService.stop();
 		mMapView.onDestroy();

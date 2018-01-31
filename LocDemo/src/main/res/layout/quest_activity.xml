@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/error_code_title"
             android:text="@string/error_code_detail"
-            android:textSize="@dimen/main_title_size" />
+            android:textSize="@dimen/second_title_size" />
 
         <TextView
             android:id="@+id/call_back_title"
@@ -45,12 +45,20 @@
             android:textSize="@dimen/main_title_size" />
 
         <TextView
-            android:id="@+id/call_back_content"
+            android:id="@+id/call_back_format"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/call_back_title"
+            android:text="@string/qa_format"
+            android:textSize="@dimen/second_title_size" />
+
+        <TextView
+            android:id="@+id/call_back_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/call_back_format"
             android:text="@string/qa_callback_mail"
-            android:textSize="@dimen/main_title_size" />
+            android:textSize="@dimen/second_title_size" />
     </RelativeLayout>
 
 </ScrollView>

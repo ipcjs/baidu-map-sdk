@@ -10,6 +10,7 @@ import com.baidu.location.service.LocationService;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,7 +39,6 @@ public class LocationActivity extends Activity {
 		LocationResult = (TextView) findViewById(R.id.textView1);
 		LocationResult.setMovementMethod(ScrollingMovementMethod.getInstance());
 		startLocation = (Button) findViewById(R.id.addfence);
-
 	}
 
 	/**
@@ -63,7 +63,6 @@ public class LocationActivity extends Activity {
 					}
 				}).start();
 			}
-			//LocationResult.setText(str);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

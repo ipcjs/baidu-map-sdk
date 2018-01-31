@@ -1,12 +1,12 @@
 package com.baidu.location.demo;
 
 
+import com.baidu.location.service.LocationService;
+import com.baidu.mapapi.SDKInitializer;
+
 import android.app.Application;
 import android.app.Service;
 import android.os.Vibrator;
-
-import com.baidu.location.service.LocationService;
-import com.baidu.mapapi.SDKInitializer;
 
 /**
  * 主Application，所有百度定位SDK的接口说明请参考线上文档：http://developer.baidu.com/map/loc_refer/index.html

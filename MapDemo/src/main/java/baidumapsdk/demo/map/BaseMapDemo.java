@@ -36,9 +36,8 @@ public class BaseMapDemo extends Activity {
     private static final int OPEN_ID = 0;
     private static final int CLOSE_ID = 1;
     //用于设置个性化地图的样式文件
-    // 提供4种样式模板:
-    // "custom_config_blue.json"，"custom_config_dark.json"，
-    // "custom_config_midnightblue.json","custom_config_icon_control.json"
+    // 精简为1套样式模板:
+    // "custom_config_dark.json"
     private static String PATH = "custom_config_dark.json";
 
     @Override

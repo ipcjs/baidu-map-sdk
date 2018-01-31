@@ -129,7 +129,10 @@ public class MainActivity extends Activity {
                     TargetClass = IsHotWifiActivity.class;
 					break;
 				case 7:
-                    TargetClass = QuestActivity.class;
+                    TargetClass = ForegroundActivity.class;
+					break;
+				case 8:
+					TargetClass = QuestActivity.class;
 					break;
 				default:
 					break;
@@ -153,8 +156,8 @@ public class MainActivity extends Activity {
 		data.add("位置消息提醒");
 		data.add("室内定位功能");
 		data.add("判断移动热点");
+		data.add("android 8.0后台定位示例");
 		data.add("常见问题说明");
-		
 
 		return data;
 	}

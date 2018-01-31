@@ -1,7 +1,7 @@
 package com.baidu.location.demo;
 import com.baidu.baidulocationdemo.R;
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.BDNotifyListener;
 import com.baidu.location.LocationClient;
 import android.app.Activity;
@@ -55,9 +55,7 @@ public class NotifyActivity extends Activity{
                         mLocationClient.removeNotifyEvent(mNotifyLister);
                         startNotify.setText("开启位置提醒");
                     }
-
                 }
-
 
             }
         });
@@ -68,10 +66,16 @@ public class NotifyActivity extends Activity{
         // TODO Auto-generated method stub
         super.onStop();
         mLocationClient.removeNotifyEvent(mNotifyLister);
-        mLocationClient = null;
-        mNotifyLister= null;
-        listener = null;
+        mLocationClient.unRegisterLocationListener(listener);
+        mLocationClient.stop();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocationClient.removeNotifyEvent(mNotifyLister);
+        mLocationClient.unRegisterLocationListener(listener);
+        mLocationClient.stop();
     }
 
     private Handler notifyHandler = new Handler(){
@@ -84,7 +88,7 @@ public class NotifyActivity extends Activity{
         }
 
     };
-    public class NotiftLocationListener implements BDLocationListener {
+    public class NotiftLocationListener extends BDAbstractLocationListener {
 
         @Override
         public void onReceiveLocation(BDLocation location) {

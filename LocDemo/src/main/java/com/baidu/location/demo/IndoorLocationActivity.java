@@ -1,7 +1,5 @@
 package com.baidu.location.demo;
 
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -17,8 +15,8 @@ import baidumapsdk.demo.indoorview.BaseStripAdapter;
 import baidumapsdk.demo.indoorview.StripListView;
 
 import com.baidu.baidulocationdemo.R;
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 
@@ -145,7 +143,7 @@ public class IndoorLocationActivity extends Activity {
     /**
      * 定位SDK监听函数
      */
-    public class MyLocationListenner implements BDLocationListener {
+    public class MyLocationListenner extends BDAbstractLocationListener {
 
         private String lastFloor = null;
 
@@ -204,7 +202,6 @@ public class IndoorLocationActivity extends Activity {
         }
         
         public void onConnectHotSpotMessage(String s, int i){
-        	
         }
     }
 

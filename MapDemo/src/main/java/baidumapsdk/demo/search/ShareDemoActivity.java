@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
+import baidumapsdk.demo.R;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
@@ -39,8 +39,6 @@ import com.baidu.mapapi.search.share.ShareUrlResult;
 import com.baidu.mapapi.search.share.ShareUrlSearch;
 
 import static com.baidu.mapapi.search.share.RouteShareURLOption.RouteShareMode;
-
-import baidumapsdk.demo.R;
 
 /**
  * 演示短串分享功能，
@@ -177,7 +175,12 @@ public class ShareDemoActivity extends Activity implements
         it.putExtra(Intent.EXTRA_TEXT, "您的朋友通过百度地图SDK与您分享一条路线，URL "
                 + " -- " + shareUrlResult.getUrl());
         it.setType("text/plain");
-        startActivity(Intent.createChooser(it, "将短串分享到"));
+        Intent intent = Intent.createChooser(it, "将短串分享到");
+        if (null == intent) {
+            Toast.makeText(ShareDemoActivity.this, "抱歉，分享目标选择失败",
+                Toast.LENGTH_LONG).show();
+        }
+        startActivity(intent);
     }
 
     @Override

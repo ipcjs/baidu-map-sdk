@@ -3,6 +3,7 @@ package baidumapsdk.demo.search;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -51,13 +52,18 @@ public class GeoCoderDemo extends Activity implements OnGetGeoCoderResultListene
      */
     public void searchButtonProcess(View v) {
         if (v.getId() == R.id.reversegeocode) {
+            int version=0;
             EditText lat = (EditText) findViewById(R.id.lat);
             EditText lon = (EditText) findViewById(R.id.lon);
+            CheckBox cb=(CheckBox) findViewById(R.id.newVersion);
             LatLng ptCenter = new LatLng((Float.valueOf(lat.getText()
                     .toString())), (Float.valueOf(lon.getText().toString())));
             // 反Geo搜索
+            if(cb.isChecked()){
+                version=1;
+            }
             mSearch.reverseGeoCode(new ReverseGeoCodeOption()
-                    .location(ptCenter));
+                    .location(ptCenter).newVersion(version));
         } else if (v.getId() == R.id.geocode) {
             EditText editCity = (EditText) findViewById(R.id.city);
             EditText editGeoCodeKey = (EditText) findViewById(R.id.geocodekey);
@@ -117,7 +123,7 @@ public class GeoCoderDemo extends Activity implements OnGetGeoCoderResultListene
                         .fromResource(R.drawable.icon_marka)));
         mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(result
                 .getLocation()));
-        Toast.makeText(GeoCoderDemo.this, result.getAddress(),
+        Toast.makeText(GeoCoderDemo.this, result.getAddress()+" adcode: "+result.getAdcode(),
                 Toast.LENGTH_LONG).show();
 
     }
