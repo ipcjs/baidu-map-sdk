@@ -42,6 +42,9 @@ dependencies {
 
 apply plugin: 'com.github.dcendents.android-maven'
 
+group = 'com.github.ipcjs'
+version = 'g01_1.2.1'
+project.archivesBaseName = 'baidu-map-sdk'
 task javadocJar(type: Jar) {
     from '../libs/doc/panorama', '../libs/doc/navi', '../libs/doc/location', '../libs/doc/map'
     classifier = 'javadoc'
