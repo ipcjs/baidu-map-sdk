@@ -49,7 +49,7 @@
 | v1.0.3   | g01_1.0.4 | --          | v7.2.0  | v4.4.1     | v3.3.1  | v2.6.0  | 建立项目      |
 | v1.1.0   | g01_1.1.0 | `g02_1.1.1` | v7.2.0  | **v4.5.0** | v3.3.1  | v2.6.0  | 升级地图SDK   |
 | v1.1.2   | --        | --          | v7.2.0  | v4.5.0     | v3.3.1  | v2.6.0  | 增加utils模块 |
-| v1.2.0   | --        | --          | **v7.3.0**  | **v4.5.2**     | v3.3.1  | v2.6.0  | 升级地图和定位 |
+| v1.2.0   | g01_1.2.5 | --          |**v7.3.0**|**v4.5.2** | v3.3.1  | v2.6.0  | 升级地图和定位 |
 
 
 ### 引入
@@ -57,13 +57,13 @@
 ```groovy
 dependencies {
     // 引入已有的组合module g01, 包含的模块详见: https://github.com/ipcjs/baidu-map-sdk/tree/g01
-    compile 'com.github.ipcjs:baidu-map-sdk:g01_1.1.0'
+    compile 'com.github.ipcjs:baidu-map-sdk:g01_1.2.5'
 
     // 引入另一个组合module g02, 包含的模块详见: https://github.com/ipcjs/baidu-map-sdk/tree/g02
     compile 'com.github.ipcjs:baidu-map-sdk:g02_1.1.1'
     
     // 分别引入库module, 注意: BaiduLBS_Android.jar文件需要自己去官网下载
-    def baiduMapSdkVersion = 'v1.1.2'
+    def baiduMapSdkVersion = 'v1.2.0'
     compile "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:base:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
