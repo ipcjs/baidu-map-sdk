@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
 
     defaultConfig {
@@ -31,23 +30,23 @@ android {
         }
     }
 }
-def baiduMapSdkVersion = 'v1.2.0'
+def baiduMapSdkVersion = 'v2.0.0'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
-    compile "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
-    compile "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
+    api "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
+    api "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
 }
 
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.ipcjs'
-version = 'g01_1.2.5'
+version = 'g01_2.0.0'
 project.archivesBaseName = 'baidu-map-sdk'
 task javadocJar(type: Jar) {
     // 注意, 因为这几个目录本来是独立的javadoc文件, 像这样直接复制到一起后, 会导致一些文件被覆盖...
-    from '../libs/doc/panorama', '../libs/doc/navi', '../libs/doc/location', '../libs/doc/map'
+    from '../libs/doc/panorama', '../libs/doc/navi', '../libs/doc/location', '../libs/doc/map', '../libs/doc/ar'
     classifier = 'javadoc'
 }
 artifacts {
