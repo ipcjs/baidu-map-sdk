@@ -1,4 +1,5 @@
 com.baidu.mapapi
+com.baidu.mapapi.animation
 com.baidu.mapapi.bikenavi
 com.baidu.mapapi.bikenavi.adapter
 com.baidu.mapapi.bikenavi.controllers
@@ -19,6 +20,7 @@ com.baidu.mapapi.search.poi
 com.baidu.mapapi.search.route
 com.baidu.mapapi.search.share
 com.baidu.mapapi.search.sug
+com.baidu.mapapi.synchronization
 com.baidu.mapapi.utils
 com.baidu.mapapi.utils.poi
 com.baidu.mapapi.utils.route
