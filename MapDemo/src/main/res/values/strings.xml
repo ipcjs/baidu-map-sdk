@@ -35,6 +35,9 @@
     <string name="demo_name_overlay">覆盖物功能</string>
     <string name="demo_title_overlay">覆盖物功能--OverlayDemo</string>
     <string name="demo_desc_overlay">介绍添加覆盖物并响应点击功能和弹出pop功能</string>
+    <string name="demo_name_marker_animation">Marker动画功能</string>
+    <string name="demo_title_marker_animation">Marker动画功能--MarkerAnimationDemo</string>
+    <string name="demo_desc_marker_animation">展示Marker动画:缩放、平移、旋转、透明、组合动画</string>
     <string name="demo_name_poi">POI搜索功能</string>
     <string name="demo_title_poi">POI搜索功能--POISearchDemo</string>
     <string name="demo_desc_poi">介绍关键词查询、suggestion查询和查看餐饮类Place详情页功能</string>

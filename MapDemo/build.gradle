@@ -52,6 +52,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
     implementation project(':map')
-    implementation project(':location')
+    implementation project(':location-indoor')
     implementation project(':utils')
 }

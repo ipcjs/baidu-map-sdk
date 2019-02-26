@@ -8,6 +8,14 @@
     }
   },
   {
+    "featureType": "green",
+    "elementType": "geometry",
+    "stylers": {
+      "color": "#232c3aff",
+      "level": "14"
+    }
+  },
+  {
     "featureType": "water",
     "elementType": "geometry",
     "stylers": {
@@ -18,7 +26,15 @@
     "featureType": "land",
     "elementType": "geometry",
     "stylers": {
-      "color": "#232c3aff"
+      "color": "#232c3aff",
+      "level": "12"
+    }
+  },
+  {
+    "featureType": "land",
+    "elementType": "geometry",
+    "stylers": {
+      "color": "#283952ff"
     }
   },
   {

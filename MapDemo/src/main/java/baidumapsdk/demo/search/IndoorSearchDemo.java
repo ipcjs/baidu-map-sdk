@@ -18,6 +18,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.overlayutil.IndoorPoiOverlay;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
 import com.baidu.mapapi.search.poi.PoiIndoorInfo;
 import com.baidu.mapapi.search.poi.PoiIndoorOption;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
@@ -47,6 +48,11 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
 
+        /* 因为室内图支持最大缩放级别为22.0f，要做特殊处理，所以要先打开室内图开关，然后做地图刷新，以防设置
+         * 缩放级别为22.0f时不生效
+         */
+        mBaiduMap.setIndoorEnable(true);
+
         LatLng centerpos = new LatLng(39.871281,116.385306); // 北京南站
         MapStatus.Builder builder = new MapStatus.Builder();
         builder.target(centerpos).zoom(19.0f);
@@ -58,7 +64,6 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
         layout.addView(stripView);
         mFloorListAdapter = new BaseStripAdapter(this);
         mBaiduMap.setOnBaseIndoorMapListener(this);
-        mBaiduMap.setIndoorEnable(true); // 设置打开室内图开关
 
         mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
@@ -100,8 +105,17 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
 
     }
 
+    /**
+     * V5.2.0版本之后，还方法废弃，使用{@link #onGetPoiDetailResult(PoiDetailSearchResult)}
+     * 代替
+     */
     @Override
     public void onGetPoiDetailResult(PoiDetailResult result) {
+
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailSearchResult result) {
 
     }
 
@@ -168,4 +182,24 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
         }
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPoiSearch.destroy();
+        mMapView.onDestroy();
+    }
+
 }

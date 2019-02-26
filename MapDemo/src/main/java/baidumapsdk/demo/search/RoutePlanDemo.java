@@ -492,8 +492,12 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
                     }
 
                 });
-                myTransitDlg.show();
-                hasShownDialogue = true;
+
+                /* 防止多次进入退出，Activity已经释放，但是Dialog仍然弹出，导致的异常释放崩溃 */
+                if (!isFinishing()) {
+                    myTransitDlg.show();
+                    hasShownDialogue = true;
+                }
             }
         }
     }

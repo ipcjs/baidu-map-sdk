@@ -24,6 +24,7 @@ import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
@@ -187,17 +188,23 @@ public class BusLineSearchDemo extends FragmentActivity implements
         // 遍历所有poi，找到类型为公交线路的poi
         busLineIDList.clear();
         for (PoiInfo poi : result.getAllPoi()) {
-            if (poi.type == PoiInfo.POITYPE.BUS_LINE
-                    || poi.type == PoiInfo.POITYPE.SUBWAY_LINE) {
-                busLineIDList.add(poi.uid);
-            }
+            busLineIDList.add(poi.uid);
         }
         searchNextBusline(null);
         route = null;
     }
 
+    /**
+     * V5.2.0版本之后，还方法废弃，使用{@link #onGetPoiDetailResult(PoiDetailSearchResult)}
+     * 代替
+     */
     @Override
     public void onGetPoiDetailResult(PoiDetailResult result) {
+
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailSearchResult result) {
 
     }
 

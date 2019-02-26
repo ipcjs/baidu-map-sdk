@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-
+import baidumapsdk.demo.R;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.FileTileProvider;
 import com.baidu.mapapi.map.MapStatus;
@@ -27,12 +27,8 @@ import com.baidu.mapapi.map.TileProvider;
 import com.baidu.mapapi.map.UrlTileProvider;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
-
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-
-import baidumapsdk.demo.R;
-import baidumapsdk.demo.map.BaseMapDemo;
 
 
 /**
@@ -132,7 +128,14 @@ public class TileOverlayDemo extends Activity implements BaiduMap.OnMapLoadedCal
         // 通过option指定相关属性，向地图添加在线瓦片图对象
         tileOverlay = mBaiduMap.addTileLayer(options.tileProvider(tileProvider).setMaxTileTmp(TILE_TMP)
                 .setPositionFromBounds(new LatLngBounds.Builder().include(northeast).include(southwest).build()));
+
         if (mapLoaded) {
+            /* 设置底图类型为NONE，即空白地图，
+             * 以避免瓦片图标注与底图标注存在叠加显示，影响暂时效果
+             * 同时提高加载速度
+             */
+            mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NONE);
+
             mBaiduMap.setMaxAndMinZoomLevel(21.0f, 3.0f);
             mBaiduMap.setMapStatusLimits(new LatLngBounds.Builder().include(northeast).include(southwest).build());
             mBaiduMap.setMapStatus(mMapStatusUpdate);

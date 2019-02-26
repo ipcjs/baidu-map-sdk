@@ -39,6 +39,7 @@ public class BaseMapDemo extends Activity {
     // 精简为1套样式模板:
     // "custom_config_dark.json"
     private static String PATH = "custom_config_dark.json";
+    private static int icon_themeId = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class BaseMapDemo extends Activity {
         MapStatus.Builder builder = new MapStatus.Builder();
         LatLng center = new LatLng(39.915071, 116.403907); // 默认 天安门
         float zoom = 11.0f; // 默认 11级
+
+        /* 该Intent是OfflineDemo中查看离线地图调起的 */
         Intent intent = getIntent();
         if (null != intent) {
             mEnableCustomStyle = intent.getBooleanExtra("customStyle", true);
@@ -65,7 +68,6 @@ public class BaseMapDemo extends Activity {
          * MapView.setCustomMapStylePath方法之后执行，否则个性化地图不会显示
          */
         setMapCustomFile(this, PATH);
-
 
         mMapView = new MapView(this, new BaiduMapOptions());
         initView(this);
@@ -152,6 +154,17 @@ public class BaseMapDemo extends Activity {
 
         MapView.setCustomMapStylePath(moduleName + "/" + PATH);
 
+    }
+
+    /**
+     * 设置个性化icon
+     *
+     * @param context
+     * @param icon_themeId
+     */
+    private void setIconCustom(Context context, int icon_themeId){
+
+       MapView.setIconCustom(icon_themeId);
     }
 
     @Override

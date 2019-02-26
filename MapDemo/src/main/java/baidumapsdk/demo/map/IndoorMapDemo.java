@@ -68,11 +68,15 @@ public class IndoorMapDemo extends Activity implements OnGetRoutePlanResultListe
         mMapView = (MapView) mainview.findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
 
+        /* 因为室内图支持最大缩放级别为22.0f，要做特殊处理，所以要先打开室内图开关，然后做地图刷新，以防设置
+         * 缩放级别为22.0f时不生效
+         */
+        mBaiduMap.setIndoorEnable(true);
+
         LatLng centerpos = new LatLng(39.916958, 116.379278); // 西单大悦城
         MapStatus.Builder builder = new MapStatus.Builder();
         builder.target(centerpos).zoom(19.0f);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-        mBaiduMap.setIndoorEnable(true);
 
         mSearch = RoutePlanSearch.newInstance();
         mSearch.setOnGetRoutePlanResultListener(this);

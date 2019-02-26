@@ -27,6 +27,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
@@ -135,8 +136,17 @@ public class ShareDemoActivity extends Activity implements
         poiOverlay.zoomToSpan();
     }
 
+    /**
+     * V5.2.0版本之后，还方法废弃，使用{@link #onGetPoiDetailResult(PoiDetailSearchResult)}
+     * 代替
+     */
     @Override
     public void onGetPoiDetailResult(PoiDetailResult result) {
+
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailSearchResult result) {
 
     }
 

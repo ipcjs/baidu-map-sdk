@@ -25,8 +25,7 @@ public class PoiOverlay extends OverlayManager {
     /**
      * 构造函数
      * 
-     * @param baiduMap
-     *            该 PoiOverlay 引用的 BaiduMap 对象
+     * @param baiduMap   该 PoiOverlay 引用的 BaiduMap 对象
      */
     public PoiOverlay(BaiduMap baiduMap) {
         super(baiduMap);
@@ -35,8 +34,7 @@ public class PoiOverlay extends OverlayManager {
     /**
      * 设置POI数据
      * 
-     * @param poiResult
-     *            设置POI数据
+     * @param poiResult    设置POI数据
      */
     public void setData(PoiResult poiResult) {
         this.mPoiResult = poiResult;
@@ -47,29 +45,32 @@ public class PoiOverlay extends OverlayManager {
         if (mPoiResult == null || mPoiResult.getAllPoi() == null) {
             return null;
         }
-        List<OverlayOptions> markerList = new ArrayList<OverlayOptions>();
+
+        List<OverlayOptions> markerList = new ArrayList<>();
         int markerSize = 0;
-        for (int i = 0; i < mPoiResult.getAllPoi().size()
-                && markerSize < MAX_POI_SIZE; i++) {
+
+        for (int i = 0; i < mPoiResult.getAllPoi().size() && markerSize < MAX_POI_SIZE; i++) {
             if (mPoiResult.getAllPoi().get(i).location == null) {
                 continue;
             }
+
             markerSize++;
             Bundle bundle = new Bundle();
             bundle.putInt("index", i);
             markerList.add(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromAssetWithDpi("Icon_mark"
-                            + markerSize + ".png")).extraInfo(bundle)
-                    .position(mPoiResult.getAllPoi().get(i).location));
+                .icon(BitmapDescriptorFactory.fromAssetWithDpi("Icon_mark" + markerSize + ".png"))
+                .extraInfo(bundle)
+                .position(mPoiResult.getAllPoi().get(i).location));
             
         }
+
         return markerList;
     }
 
     /**
-     * 获取该 PoiOverlay 的 poi数据
+     * 获取该PoiOverlay的poi数据
      * 
-     * @return
+     * @return     POI数据
      */
     public PoiResult getPoiResult() {
         return mPoiResult;
@@ -78,10 +79,9 @@ public class PoiOverlay extends OverlayManager {
     /**
      * 覆写此方法以改变默认点击行为
      * 
-     * @param i
-     *            被点击的poi在
-     *            {@link com.baidu.mapapi.search.poi.PoiResult#getAllPoi()} 中的索引
-     * @return
+     * @param i    被点击的poi在
+     *             {@link com.baidu.mapapi.search.poi.PoiResult#getAllPoi()} 中的索引
+     * @return     true--事件已经处理，false--事件未处理
      */
     public boolean onPoiClick(int i) {
 //        if (mPoiResult.getAllPoi() != null
@@ -98,15 +98,16 @@ public class PoiOverlay extends OverlayManager {
         if (!mOverlayList.contains(marker)) {
             return false;
         }
+
         if (marker.getExtraInfo() != null) {
             return onPoiClick(marker.getExtraInfo().getInt("index"));
         }
+
         return false;
     }
 
     @Override
     public boolean onPolylineClick(Polyline polyline) {
-        // TODO Auto-generated method stub
         return false;
     }
 }

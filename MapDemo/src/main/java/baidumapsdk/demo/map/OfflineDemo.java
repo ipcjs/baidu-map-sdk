@@ -78,12 +78,13 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
                 cityNameView.setText(hotCityNames.get(i));
             }
         });
+
         ListView allCityList = (ListView) findViewById(R.id.allcitylist);
         // 获取所有支持离线地图的城市
         ArrayList<String> allCities = new ArrayList<String>();
         final ArrayList<String> allCityNames = new ArrayList<String>();
         ArrayList<MKOLSearchRecord> records2 = mOffline.getOfflineCityList();
-        if (records1 != null) {
+        if (records2 != null) {
             for (MKOLSearchRecord r : records2) {
                 //V4.5.0起，保证数据不溢出，使用long型保存数据包大小结果
                 allCities.add(r.cityName + "(" + r.cityID + ")" + "   --"
@@ -150,9 +151,12 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
     public void search(View view) {
         ArrayList<MKOLSearchRecord> records = mOffline.searchCity(cityNameView
                 .getText().toString());
+
         if (records == null || records.size() != 1) {
+            Toast.makeText(this, "不支持该城市离线地图", Toast.LENGTH_SHORT).show();
             return;
         }
+
         cidView.setText(String.valueOf(records.get(0).cityID));
     }
 
@@ -165,8 +169,8 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
         int cityid = Integer.parseInt(cidView.getText().toString());
         mOffline.start(cityid);
         clickLocalMapListButton(null);
-        Toast.makeText(this, "开始下载离线地图. cityid: " + cityid, Toast.LENGTH_SHORT)
-                .show();
+
+        Toast.makeText(this, "开始下载离线地图. cityid: " + cityid, Toast.LENGTH_SHORT).show();
         updateView();
     }
 
@@ -191,8 +195,7 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
     public void remove(View view) {
         int cityid = Integer.parseInt(cidView.getText().toString());
         mOffline.remove(cityid);
-        Toast.makeText(this, "删除离线地图. cityid: " + cityid, Toast.LENGTH_SHORT)
-                .show();
+        Toast.makeText(this, "删除离线地图. cityid: " + cityid, Toast.LENGTH_SHORT).show();
         updateView();
     }
 
@@ -251,21 +254,22 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
                 MKOLUpdateElement update = mOffline.getUpdateInfo(state);
                 // 处理下载进度更新提示
                 if (update != null) {
-                    stateView.setText(String.format("%s : %d%%", update.cityName,
-                            update.ratio));
+                    stateView.setText(String.format("%s : %d%%", update.cityName, update.ratio));
                     updateView();
                 }
             }
             break;
+
             case MKOfflineMap.TYPE_NEW_OFFLINE:
                 // 有新离线地图安装
                 Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
                 break;
+
             case MKOfflineMap.TYPE_VER_UPDATE:
                 // 版本更新提示
                 // MKOLUpdateElement e = mOffline.getUpdateInfo(state);
-
                 break;
+
             default:
                 break;
         }
@@ -309,16 +313,19 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
             TextView ratio = (TextView) view.findViewById(R.id.ratio);
             ratio.setText(e.ratio + "%");
             title.setText(e.cityName);
+
             if (e.update) {
                 update.setText("可更新");
             } else {
                 update.setText("最新");
             }
+
             if (e.ratio != 100) {
                 display.setEnabled(false);
             } else {
                 display.setEnabled(true);
             }
+
             remove.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
@@ -326,6 +333,7 @@ public class OfflineDemo extends Activity implements MKOfflineMapListener {
                     updateView();
                 }
             });
+
             display.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

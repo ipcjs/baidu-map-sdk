@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
+import baidumapsdk.demo.R;
 import com.baidu.mapapi.favorite.FavoriteManager;
 import com.baidu.mapapi.favorite.FavoritePoiInfo;
 import com.baidu.mapapi.map.BaiduMap;
@@ -27,11 +27,8 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import baidumapsdk.demo.R;
 
 /**
  * 演示如何使用本地点收藏功能
@@ -95,6 +92,7 @@ public class FavoriteDemo extends Activity implements OnMapLongClickListener,
                     .show();
             return;
         }
+
         FavoritePoiInfo info = new FavoritePoiInfo();
         info.poiName(nameText.getText().toString());
 
@@ -109,14 +107,26 @@ public class FavoriteDemo extends Activity implements OnMapLongClickListener,
                 Toast.makeText(FavoriteDemo.this, "添加成功", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(FavoriteDemo.this, "添加失败", Toast.LENGTH_LONG).show();
+                return;
             }
 
         } catch (Exception e) {
-            // TODO: handle exception
-            Toast.makeText(FavoriteDemo.this, "坐标解析错误", Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(FavoriteDemo.this, "坐标解析错误", Toast.LENGTH_LONG).show();
+            return;
         }
 
+        // 在地图上更新当前最新添加的点
+        mBaiduMap.clear();
+        List<FavoritePoiInfo> list = FavoriteManager.getInstance().getAllFavPois();
+        if(null == list || list.size() == 0){
+            return;
+        }
+        MarkerOptions option = new MarkerOptions().icon(bdA).position(list.get(0).getPt());
+        Bundle b = new Bundle();
+        b.putString("id", list.get(0).getID());
+        option.extraInfo(b);
+        Marker currentMarker = (Marker) mBaiduMap.addOverlay(option);
+        markers.add(currentMarker);
 
     }
 
@@ -133,6 +143,18 @@ public class FavoriteDemo extends Activity implements OnMapLongClickListener,
         mdifyName = (EditText) mModify.findViewById(R.id.modifyedittext);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(mModify);
+
+        /* 避免点未收藏时，点击修改框，造成空指针异常 */
+        if (null == currentID) {
+            Toast.makeText(FavoriteDemo.this, "该点未收藏，无法修改", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (null == FavoriteManager.getInstance().getFavPoi(currentID)) {
+            Toast.makeText(FavoriteDemo.this, "获取Poi失败", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String oldName = FavoriteManager.getInstance().getFavPoi(currentID).getPoiName();
         mdifyName.setText(oldName);
         builder.setPositiveButton("确认", new OnClickListener() {
@@ -170,6 +192,12 @@ public class FavoriteDemo extends Activity implements OnMapLongClickListener,
      * @param v
      */
     public void deleteOneClick(View v) {
+        /* 避免点未收藏时，点击删除选项框，造成空指针异常 */
+        if (null == currentID) {
+            Toast.makeText(FavoriteDemo.this, "该点未收藏，无法进行删除操作", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (FavoriteManager.getInstance().deleteFavPoi(currentID)) {
             Toast.makeText(FavoriteDemo.this, "删除点成功", Toast.LENGTH_LONG).show();
             if (markers != null) {
@@ -254,7 +282,6 @@ public class FavoriteDemo extends Activity implements OnMapLongClickListener,
 
     @Override
     public void onMapLongClick(LatLng point) {
-        // TODO Auto-generated method stub
         locationText.setText(String.valueOf(point.latitude) + "," + String.valueOf(point.longitude));
         MarkerOptions ooA = new MarkerOptions().position(point).icon(bdA);
         mBaiduMap.clear();
@@ -264,27 +291,30 @@ public class FavoriteDemo extends Activity implements OnMapLongClickListener,
     @Override
     public boolean onMarkerClick(Marker marker) {
         mBaiduMap.hideInfoWindow();
-        // TODO Auto-generated method stub
         if (marker == null) {
             return false;
         }
+
         InfoWindow mInfoWindow = new InfoWindow(mPop, marker.getPosition(), -47);
         mBaiduMap.showInfoWindow(mInfoWindow);
         MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(marker.getPosition());
         mBaiduMap.setMapStatus(update);
+
+        if (null == marker.getExtraInfo()) {
+            return false;
+        }
+
         currentID = marker.getExtraInfo().getString("id");
         return true;
     }
 
     @Override
     public void onMapClick(LatLng point) {
-        // TODO Auto-generated method stub
         mBaiduMap.hideInfoWindow();
     }
 
     @Override
     public boolean onMapPoiClick(MapPoi poi) {
-        // TODO Auto-generated method stub
         return false;
     }
 
