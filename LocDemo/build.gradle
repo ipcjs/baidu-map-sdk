@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+        }
     }
     compileSdkVersion rootProject.compileSdkVersion
 
@@ -22,11 +25,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.debug
         }
-
         debug {
-            signingConfig signingConfigs.debug
+
         }
     }
 
@@ -39,6 +40,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':location')
+    implementation project(':location-indoor')
     implementation project(':map')
+    implementation project(':panorama')
 }
