@@ -34,24 +34,26 @@ import java.util.ArrayList;
 
 public class BNaviMainActivity extends Activity {
 
+    private final static String TAG = BNaviMainActivity.class.getSimpleName();
+
     private MapView mMapView;
     private BaiduMap mBaiduMap;
 
-    private Marker mMarkerA;
-    private Marker mMarkerB;
+    /*导航起终点Marker，可拖动改变起终点的坐标*/
+    private Marker mStartMarker;
+    private Marker mEndMarker;
 
     private LatLng startPt,endPt;
 
-    private BikeNavigateHelper mNaviHelper;
-    private WalkNavigateHelper mWNaviHelper;
-    BikeNaviLaunchParam param;
+    BikeNaviLaunchParam bikeParam;
     WalkNaviLaunchParam walkParam;
+
     private static boolean isPermissionRequested = false;
 
-    BitmapDescriptor bdA = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_marka);
-    BitmapDescriptor bdB = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_markb);
+    BitmapDescriptor bdStart = BitmapDescriptorFactory
+            .fromResource(R.drawable.icon_start);
+    BitmapDescriptor bdEnd = BitmapDescriptorFactory
+            .fromResource(R.drawable.icon_end);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,8 @@ public class BNaviMainActivity extends Activity {
         initMapStatus();
         initOverlay();
 
-        Button bikeBtn = (Button) findViewById(R.id.button);
+        /*骑行导航入口*/
+        Button bikeBtn = (Button) findViewById(R.id.btn_bikenavi);
         bikeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,29 +73,38 @@ public class BNaviMainActivity extends Activity {
             }
         });
 
-        Button walkBtn = (Button) findViewById(R.id.button1);
+        /*普通步行导航入口*/
+        Button walkBtn = (Button) findViewById(R.id.btn_walknavi_normal);
         walkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                walkParam.extraNaviMode(0);
                 startWalkNavi();
             }
         });
 
-        try {
-            mNaviHelper = BikeNavigateHelper.getInstance();
-            mWNaviHelper = WalkNavigateHelper.getInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        /*AR步行导航入口*/
+        Button arWalkBtn = (Button) findViewById(R.id.btn_walknavi_ar);
+        arWalkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                walkParam.extraNaviMode(1);
+                startWalkNavi();
+            }
+        });
 
         startPt = new LatLng(40.047416,116.312143);
         endPt = new LatLng(40.048424, 116.313513);
 
-        param = new BikeNaviLaunchParam().stPt(startPt).endPt(endPt);
+        /*构造导航起终点参数对象*/
+        bikeParam = new BikeNaviLaunchParam().stPt(startPt).endPt(endPt);
         walkParam = new WalkNaviLaunchParam().stPt(startPt).endPt(endPt);
 
     }
 
+    /**
+     * 初始化地图状态
+     */
     private void initMapStatus(){
         mBaiduMap = mMapView.getMap();
         MapStatus.Builder builder = new MapStatus.Builder();
@@ -100,33 +112,35 @@ public class BNaviMainActivity extends Activity {
         mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
     }
 
+    /**
+     * 初始化导航起终点Marker
+     */
     public void initOverlay() {
         // add marker overlay
         LatLng llA = new LatLng(40.047416,116.312143);
         LatLng llB = new LatLng(40.048424, 116.313513);
 
-        MarkerOptions ooA = new MarkerOptions().position(llA).icon(bdA)
+        MarkerOptions ooA = new MarkerOptions().position(llA).icon(bdStart)
                 .zIndex(9).draggable(true);
 
-        mMarkerA = (Marker) (mBaiduMap.addOverlay(ooA));
-        mMarkerA.setDraggable(true);
-        MarkerOptions ooB = new MarkerOptions().position(llB).icon(bdB)
+        mStartMarker = (Marker) (mBaiduMap.addOverlay(ooA));
+        mStartMarker.setDraggable(true);
+        MarkerOptions ooB = new MarkerOptions().position(llB).icon(bdEnd)
                 .zIndex(5);
-        mMarkerB = (Marker) (mBaiduMap.addOverlay(ooB));
-        mMarkerB.setDraggable(true);
-
+        mEndMarker = (Marker) (mBaiduMap.addOverlay(ooB));
+        mEndMarker.setDraggable(true);
 
         mBaiduMap.setOnMarkerDragListener(new BaiduMap.OnMarkerDragListener() {
             public void onMarkerDrag(Marker marker) {
             }
 
             public void onMarkerDragEnd(Marker marker) {
-                if(marker == mMarkerA){
+                if(marker == mStartMarker){
                     startPt = marker.getPosition();
-                }else if(marker == mMarkerB){
+                }else if(marker == mEndMarker){
                     endPt = marker.getPosition();
                 }
-                param.stPt(startPt).endPt(endPt);
+                bikeParam.stPt(startPt).endPt(endPt);
                 walkParam.stPt(startPt).endPt(endPt);
             }
 
@@ -135,58 +149,67 @@ public class BNaviMainActivity extends Activity {
         });
     }
 
+    /**
+     * 开始骑行导航
+     */
     private void startBikeNavi() {
-        Log.d("View", "startBikeNavi");
+        Log.d(TAG, "startBikeNavi");
         try {
-            mNaviHelper.initNaviEngine(this, new IBEngineInitListener() {
+            BikeNavigateHelper.getInstance().initNaviEngine(this, new IBEngineInitListener() {
                 @Override
                 public void engineInitSuccess() {
-                    Log.d("View", "engineInitSuccess");
-                    routePlanWithParam();
+                    Log.d(TAG, "BikeNavi engineInitSuccess");
+                    routePlanWithBikeParam();
                 }
 
                 @Override
                 public void engineInitFail() {
-                    Log.d("View", "engineInitFail");
+                    Log.d(TAG, "BikeNavi engineInitFail");
                 }
             });
         } catch (Exception e) {
-            Log.d("Exception", "startBikeNavi");
+            Log.d(TAG, "startBikeNavi Exception");
             e.printStackTrace();
         }
     }
 
+    /**
+     * 开始步行导航
+     */
     private void startWalkNavi() {
-        Log.d("View", "startBikeNavi");
+        Log.d(TAG, "startBikeNavi");
         try {
-            mWNaviHelper.initNaviEngine(this, new IWEngineInitListener() {
+            WalkNavigateHelper.getInstance().initNaviEngine(this, new IWEngineInitListener() {
                 @Override
                 public void engineInitSuccess() {
-                    Log.d("View", "engineInitSuccess");
+                    Log.d(TAG, "WalkNavi engineInitSuccess");
                     routePlanWithWalkParam();
                 }
 
                 @Override
                 public void engineInitFail() {
-                    Log.d("View", "engineInitFail");
+                    Log.d(TAG, "WalkNavi engineInitFail");
                 }
             });
         } catch (Exception e) {
-            Log.d("Exception", "startBikeNavi");
+            Log.d(TAG, "startBikeNavi Exception");
             e.printStackTrace();
         }
     }
 
-    private void routePlanWithParam() {
-        mNaviHelper.routePlanWithParams(param, new IBRoutePlanListener() {
+    /**
+     * 发起骑行导航算路
+     */
+    private void routePlanWithBikeParam() {
+        BikeNavigateHelper.getInstance().routePlanWithParams(bikeParam, new IBRoutePlanListener() {
             @Override
             public void onRoutePlanStart() {
-                Log.d("View", "onRoutePlanStart");
+                Log.d(TAG, "BikeNavi onRoutePlanStart");
             }
 
             @Override
             public void onRoutePlanSuccess() {
-                Log.d("View", "onRoutePlanSuccess");
+                Log.d(TAG, "BikeNavi onRoutePlanSuccess");
                 Intent intent = new Intent();
                 intent.setClass(BNaviMainActivity.this, BNaviGuideActivity.class);
                 startActivity(intent);
@@ -194,16 +217,20 @@ public class BNaviMainActivity extends Activity {
 
             @Override
             public void onRoutePlanFail(BikeRoutePlanError error) {
-                Log.d("View", "onRoutePlanFail");
+                Log.d(TAG, "BikeNavi onRoutePlanFail");
             }
 
         });
     }
+
+    /**
+     * 发起步行导航算路
+     */
     private void routePlanWithWalkParam() {
-        mWNaviHelper.routePlanWithParams(walkParam, new IWRoutePlanListener() {
+        WalkNavigateHelper.getInstance().routePlanWithParams(walkParam, new IWRoutePlanListener() {
             @Override
             public void onRoutePlanStart() {
-                Log.d("View", "onRoutePlanStart");
+                Log.d(TAG, "WalkNavi onRoutePlanStart");
             }
 
             @Override
@@ -216,13 +243,16 @@ public class BNaviMainActivity extends Activity {
 
             @Override
             public void onRoutePlanFail(WalkRoutePlanError error) {
-                Log.d("View", "onRoutePlanFail");
+                Log.d(TAG, "WalkNavi onRoutePlanFail");
             }
 
         });
     }
 
 
+    /**
+     * Android6.0之后需要动态申请权限
+     */
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionRequested) {
 
@@ -256,7 +286,7 @@ public class BNaviMainActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
-        bdA.recycle();
-        bdB.recycle();
+        bdStart.recycle();
+        bdEnd.recycle();
     }
 }

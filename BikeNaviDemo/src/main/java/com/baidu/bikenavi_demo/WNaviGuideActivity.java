@@ -7,8 +7,6 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -21,6 +19,7 @@ import com.baidu.mapapi.walknavi.model.RouteGuideKind;
 import com.baidu.platform.comapi.walknavi.WalkNaviModeSwitchListener;
 import com.baidu.platform.comapi.walknavi.widget.ArCameraView;
 
+
 public class WNaviGuideActivity extends Activity {
 
     private final static String TAG = WNaviGuideActivity.class.getSimpleName();
@@ -32,7 +31,6 @@ public class WNaviGuideActivity extends Activity {
         super.onDestroy();
         mNaviHelper.quit();
     }
-
 
     @Override
     protected void onResume() {
@@ -74,16 +72,16 @@ public class WNaviGuideActivity extends Activity {
             }
         });
 
-        boolean startResult = mNaviHelper.startWalkNavi(WNaviGuideActivity.this);
-        Log.e(TAG, "startWalkNavi result : " + startResult);
-
         mNaviHelper.setTTsPlayer(new IWTTSPlayer() {
             @Override
             public int playTTSText(final String s, boolean b) {
-                Log.d("tts", s);
+                Log.d(TAG, "tts: " + s);
                 return 0;
             }
         });
+
+        boolean startResult = mNaviHelper.startWalkNavi(WNaviGuideActivity.this);
+        Log.e(TAG, "startWalkNavi result : " + startResult);
 
         mNaviHelper.setRouteGuidanceListener(this, new IWRouteGuidanceListener() {
             @Override

@@ -39,7 +39,7 @@ android {
     defaultConfig {
         applicationId "baidumapsdk.demo"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
