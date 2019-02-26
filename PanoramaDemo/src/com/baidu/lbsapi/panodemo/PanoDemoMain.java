@@ -183,7 +183,6 @@ public class PanoDemoMain extends Activity {
         hideIndoorAblumLayout();
 
         // 测试回调函数,需要注意的是回调函数要在setPanorama()之前调用，否则回调函数可能执行异常
-        // 所有的回调均是在子线程中执行的...
         mPanoView.setPanoramaViewListener(new PanoramaViewListener() {
 
             @Override
@@ -203,17 +202,27 @@ public class PanoDemoMain extends Activity {
 
             @Override
             public void onDescriptionLoadEnd(String json) {
-                Log.i(LTAG, "onDescriptionLoadEnd : " + json);
+
             }
 
             @Override
             public void onMessage(String msgName, int msgType) {
-                Log.i(LTAG, "onMessage : " + msgName + ", " + msgType);
+
             }
 
             @Override
             public void onCustomMarkerClick(String key) {
-                Log.i(LTAG, "onCustomMarkerClick : " + key);
+
+            }
+
+            @Override
+            public void onMoveStart() {
+
+            }
+
+            @Override
+            public void onMoveEnd() {
+
             }
         });
 

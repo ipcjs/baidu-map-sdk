@@ -27,7 +27,7 @@
         android:theme="@android:style/Theme.Holo" >
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="DD279b2a90afdf0ae7a3796787a0742e" />
+            android:value="lWMlEMyTzxDiT5rLnIAKe70fdIGHEmV0" />
 
         <activity
             android:name="com.baidu.lbsapi.panodemo.PanoDemoActivity"

@@ -12,6 +12,18 @@ tasks.withType(JavaCompile) {
 android {
     compileSdkVersion rootProject.compileSdkVersion
 
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.baidu.lbsapi.panodemo"
+        minSdkVersion 14
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
