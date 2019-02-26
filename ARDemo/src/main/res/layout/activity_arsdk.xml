@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/app_name_demo"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16sp"/>
+
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <EditText
+                android:id="@+id/custom_category" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="自定义单点测试数据"/>
+        <Button
+                android:id="@+id/app_custom"
+                android:text="@string/app_custom"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+        />
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/app_more_custompoint"
+            android:text="@string/app_custom_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
+    <Button
+            android:id="@+id/app_operate"
+            android:text="@string/app_operate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/app_explore"
+            android:text="@string/app_explore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <EditText
+                android:id="@+id/category" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="航天"/>
+        <Button
+                android:id="@+id/app_find"
+                android:text="@string/app_find"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+        />
+    </LinearLayout>
+
+
+</LinearLayout>

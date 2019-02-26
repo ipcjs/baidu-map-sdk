@@ -1,0 +1,19 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <!-- AR -->
+    <dimen name="ar_poi_width">165dp</dimen>
+    <dimen name="ar_poi_height">50dp</dimen>
+    <dimen name="ar_poi_card_max_height">230dp</dimen>
+
+    <dimen name="ar_poi_item_margin">10dp</dimen>
+    <dimen name="ar_poi_item_padding">10dp</dimen>
+    <dimen name="ar_poi_item_text_width">115dp</dimen>
+    <dimen name="ar_share_bottom_d160">123px</dimen>
+    <dimen name="ar_share_bottom_d140">108px</dimen>
+    <dimen name="ar_share_bottom_d20">15px</dimen>
+    <dimen name="ar_share_bottom_d45">35px</dimen>
+    <dimen name="ar_share_bottom_d32">25px</dimen>
+    <dimen name="ar_share_bottom_d4">3px</dimen>
+</resources>

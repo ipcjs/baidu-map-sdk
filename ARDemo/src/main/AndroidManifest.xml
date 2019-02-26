@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+          package="sdk.cammer.common.baidu.map.mapcam">
+
+    <supports-screens
+            android:anyDensity="true"
+            android:largeScreens="true"
+            android:normalScreens="true"
+            android:smallScreens="true"/>
+
+    <!--访问相机权限-->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!--访问闪光灯-->
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <!-- 这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!-- 这个权限用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <!-- 用于读取手机当前的状态-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <!-- 访问网络，网络定位需要上网-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+            android:name="sdk.cammer.common.baidu.map.application.DemoApplication"
+            android:label="@string/app_name_demo"
+            tools:replace="android:label">
+        <!-- 开发密钥 -->
+        <meta-data
+                android:name="com.baidu.lbsapi.API_KEY"
+                android:value="N8pR6i01UkMNNqp6cuL5CamVOAbQi72e">
+        </meta-data>
+        <!-- 主Activity -->
+        <activity
+                android:name="sdk.cammer.common.baidu.map.mapcam.MainActivity"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <!-- 景区Activity -->
+        <activity
+                android:name="sdk.cammer.common.baidu.map.mapcam.SceneryArActivity"
+                android:screenOrientation="portrait">
+        </activity>
+        <!-- 识楼Activity -->
+        <activity
+                android:name="sdk.cammer.common.baidu.map.mapcam.BuildingArActivity"
+                android:screenOrientation="portrait">
+        </activity>
+        <!-- Ar默认Activity -->
+        <activity
+                android:name="sdk.cammer.common.baidu.map.mapcam.ArActivity"
+                android:screenOrientation="portrait">
+        </activity>
+
+        <!-- 接入百度地图定位SDK -->
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"></service>
+    </application>
+</manifest>
