@@ -1,7 +1,7 @@
 include ':base'
 include ':map'
 include ':location'
-include ':location-base'
+include ':location-indoor'
 include ':bikenavi'
 include ':navi'
 include ':panorama'
