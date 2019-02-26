@@ -4,7 +4,6 @@ android {
     signingConfigs {
     }
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         applicationId "com.baidu.baidulocationdemo"
@@ -39,7 +38,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':location')
     implementation project(':map')
 }

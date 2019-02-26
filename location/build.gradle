@@ -3,7 +3,6 @@ apply from: '../maven_push.gradle'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
 
     defaultConfig {
@@ -30,4 +29,5 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':location-base')
 }

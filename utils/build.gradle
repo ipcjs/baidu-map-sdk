@@ -3,7 +3,6 @@ apply from: '../maven_push.gradle'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
 
     defaultConfig {
@@ -27,8 +26,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    provided files('../MapDemo/libs/BaiduLBS_Android.jar')
-    provided "com.android.support:support-v4:${rootProject.supportVersion}"
+    compileOnly files('../MapDemo/libs/BaiduLBS_Android.jar')
+    compileOnly "com.android.support:support-v4:${rootProject.supportVersion}"
 
 //    implementation 'com.android.support:appcompat-v7:26.1.0'
     testImplementation 'junit:junit:4.12'
