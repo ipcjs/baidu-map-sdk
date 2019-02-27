@@ -42,7 +42,7 @@ dependencies {
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.ipcjs'
-version = 'g01_2.0.0'
+version = 'g01_2.0.1'
 project.archivesBaseName = 'baidu-map-sdk'
 task javadocJar(type: Jar) {
     // 注意, 因为这几个目录本来是独立的javadoc文件, 像这样直接复制到一起后, 会导致一些文件被覆盖...
