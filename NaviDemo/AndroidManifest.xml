@@ -41,7 +41,7 @@
             android:name="BaiduMobAd_STAT_ID"
             android:value="48ae76de3f" />
         <meta-data android:name="com.baidu.lbsapi.API_KEY"
-		    android:value="8nqGEdwqbkTirosEClpUVmbuFbp7X79c" />
+		    android:value="1HXzGf4wfK3rYLbX9d3IbhVsemRIOQxA" />
 
         <activity
             android:name="com.baidu.navi.sdkdemo.BNDemoMainActivity"

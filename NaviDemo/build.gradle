@@ -44,6 +44,8 @@ android {
         release.setRoot('build-types/release')
     }
     defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         signingConfig signingConfigs.debug
     }
     productFlavors {
