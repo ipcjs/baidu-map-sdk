@@ -132,14 +132,15 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
         // 实际使用中请对起点终点城市进行正确的设定
 
         if (v.getId() == R.id.mass) {
-            PlanNode stMassNode = PlanNode.withCityNameAndPlaceName("北京", "天安门");
+            PlanNode stMassNode = PlanNode.withCityNameAndPlaceName("北京", "天安门广场");
             PlanNode enMassNode = PlanNode.withCityNameAndPlaceName("上海", "东方明珠");
 
             mSearch.masstransitSearch(new MassTransitRoutePlanOption().from(stMassNode).to(enMassNode));
             nowSearchType = 0;
         } else if (v.getId() == R.id.drive) {
             mSearch.drivingSearch((new DrivingRoutePlanOption())
-                    .from(stNode).to(enNode));
+                    .from(stNode).to(enNode).policy(DrivingRoutePlanOption.DrivingPolicy.ECAR_DIS_FIRST)
+                    .trafficPolicy(DrivingRoutePlanOption.DrivingTrafficPolicy.ROUTE_PATH_AND_TRAFFIC));
             nowSearchType = 1;
         } else if (v.getId() == R.id.transit) {
             mSearch.transitSearch((new TransitRoutePlanOption())
@@ -305,9 +306,10 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
 
     @Override
     public void onGetWalkingRouteResult(WalkingRouteResult result) {
-        if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(RoutePlanDemo.this, "抱歉，未找到结果", Toast.LENGTH_SHORT).show();
+        if (null == result) {
+            return;
         }
+
         if (result.error == SearchResult.ERRORNO.AMBIGUOUS_ROURE_ADDR) {
             // 起终点或途经点地址有岐义，通过以下接口获取建议查询信息
             // result.getSuggestAddrInfo()
@@ -323,7 +325,10 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
             builder.create().show();
             return;
         }
-        if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+
+        if (result.error != SearchResult.ERRORNO.NO_ERROR) {
+            Toast.makeText(RoutePlanDemo.this, "抱歉，未找到结果", Toast.LENGTH_SHORT).show();
+        } else {
             nodeIndex = -1;
             mBtnPre.setVisibility(View.VISIBLE);
             mBtnNext.setVisibility(View.VISIBLE);
@@ -367,7 +372,6 @@ public class RoutePlanDemo extends Activity implements BaiduMap.OnMapClickListen
 
             } else {
                 Log.d("route result", "结果数<0");
-                return;
             }
 
         }

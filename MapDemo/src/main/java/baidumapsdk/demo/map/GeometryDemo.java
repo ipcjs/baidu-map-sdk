@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import com.baidu.mapapi.map.ArcOptions;
 import com.baidu.mapapi.map.BaiduMap;
@@ -27,6 +26,7 @@ import com.baidu.mapapi.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.widget.Toast;
 import baidumapsdk.demo.R;
 
 /**
@@ -48,9 +48,9 @@ public class GeometryDemo extends Activity {
     // 纹理折线，点击时获取折线上点数及width
     private Polyline mTexturePolyline;
 
-    private BitmapDescriptor mRedTexture = BitmapDescriptorFactory.fromAsset("icon_road_red_arrow.png");
-    private BitmapDescriptor mBlueTexture = BitmapDescriptorFactory.fromAsset("icon_road_blue_arrow.png");
-    private BitmapDescriptor mGreenTexture = BitmapDescriptorFactory.fromAsset("icon_road_green_arrow.png");
+    private BitmapDescriptor mRedTexture = BitmapDescriptorFactory.fromAsset("Icon_road_red_arrow.png");
+    private BitmapDescriptor mBlueTexture = BitmapDescriptorFactory.fromAsset("Icon_road_blue_arrow.png");
+    private BitmapDescriptor mGreenTexture = BitmapDescriptorFactory.fromAsset("Icon_road_green_arrow.png");
     private CheckBox dottedLine;
 
     @Override
@@ -115,7 +115,7 @@ public class GeometryDemo extends Activity {
         points.add(p1);
         points.add(p2);
         points.add(p3);
-        OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(points);
+        OverlayOptions ooPolyline = new PolylineOptions().width(5).color(0xAAFF0000).points(points);
         mPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline);
 
         // 添加多颜色分段的折线绘制
@@ -136,7 +136,6 @@ public class GeometryDemo extends Activity {
         colorValue.add(0xAA0000FF);
         OverlayOptions ooPolyline1 = new PolylineOptions()
             .width(10)
-            .color(0xAAFF0000)
             .points(points1)
             .colorsValues(colorValue);
         mColorfulPolyline = (Polyline) mBaiduMap.addOverlay(ooPolyline1);
@@ -159,8 +158,9 @@ public class GeometryDemo extends Activity {
         textureIndexs.add(0);
         textureIndexs.add(1);
         textureIndexs.add(2);
+
         OverlayOptions ooPolyline11 = new PolylineOptions()
-            .width(20)
+            .width(10)
             .points(points11)
             .dottedLine(true)
             .customTextureList(textureList)

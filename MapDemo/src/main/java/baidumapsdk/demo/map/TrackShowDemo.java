@@ -100,6 +100,12 @@ public class TrackShowDemo extends Activity {
             } else {
                 return 180;
             }
+        } else if (slope == 0.0) {
+            if (toPoint.longitude > fromPoint.longitude) {
+                return -90;
+            } else {
+                return 90;
+            }
         }
         float deltAngle = 0;
         if ((toPoint.latitude - fromPoint.latitude) * slope < 0) {
@@ -161,7 +167,17 @@ public class TrackShowDemo extends Activity {
      * 计算x方向每次移动的距离
      */
     private double getXMoveDistance(double slope) {
-        if (slope == Double.MAX_VALUE) {
+        if (slope == Double.MAX_VALUE || slope == 0.0) {
+            return DISTANCE;
+        }
+        return Math.abs((DISTANCE * 1 / slope) / Math.sqrt(1 + 1 / (slope * slope)));
+    }
+
+    /**
+     * 计算y方向每次移动的距离
+     */
+    private double getYMoveDistance(double slope) {
+        if (slope == Double.MAX_VALUE || slope == 0.0) {
             return DISTANCE;
         }
         return Math.abs((DISTANCE * slope) / Math.sqrt(1 + slope * slope));
@@ -198,24 +214,37 @@ public class TrackShowDemo extends Activity {
                         });
                         double slope = getSlope(startPoint, endPoint);
                         // 是不是正向的标示
-                        boolean isReverse = (startPoint.latitude > endPoint.latitude);
+                        boolean isYReverse = (startPoint.latitude > endPoint.latitude);
+                        boolean isXReverse = (startPoint.longitude > endPoint.longitude);
 
                         double intercept = getInterception(slope, startPoint);
 
-                        double xMoveDistance = isReverse ? getXMoveDistance(slope) :
+                        double xMoveDistance = isXReverse ? getXMoveDistance(slope) :
                                 -1 * getXMoveDistance(slope);
 
+                        double yMoveDistance = isYReverse ? getYMoveDistance(slope) :
+                                -1 * getYMoveDistance(slope);
 
-                        for (double j = startPoint.latitude; !((j > endPoint.latitude) ^ isReverse);
-                             j = j - xMoveDistance) {
+
+                        for (double j = startPoint.latitude, k = startPoint.longitude;
+                             !((j > endPoint.latitude) ^ isYReverse) && !((k > endPoint.longitude) ^ isXReverse); ) {
                             LatLng latLng = null;
+
                             if (slope == Double.MAX_VALUE) {
-                                latLng = new LatLng(j, startPoint.longitude);
+                                latLng = new LatLng(j, k);
+                                j = j - yMoveDistance;
+                            } else if (slope == 0.0) {
+                                latLng = new LatLng(j, k - xMoveDistance);
+                                k = k - xMoveDistance;
                             } else {
                                 latLng = new LatLng(j, (j - intercept) / slope);
+                                j = j - yMoveDistance;
                             }
 
                             final LatLng finalLatLng = latLng;
+                            if (finalLatLng.latitude == 0 && finalLatLng.longitude == 0) {
+                                continue;
+                            }
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {

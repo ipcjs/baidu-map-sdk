@@ -1,6 +1,7 @@
 package baidumapsdk.demo.map;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -65,12 +67,12 @@ public class LocationDemo extends Activity implements SensorEventListener {
         requestLocButton = (Button) findViewById(R.id.button1);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);//获取传感器管理服务
         mCurrentMode = LocationMode.NORMAL;
-        requestLocButton.setText("普通");
+        requestLocButton.setText("定位模式：普通");
         OnClickListener btnClickListener = new OnClickListener() {
             public void onClick(View v) {
                 switch (mCurrentMode) {
                     case NORMAL:
-                        requestLocButton.setText("跟随");
+                        requestLocButton.setText("定位模式：跟随");
                         mCurrentMode = LocationMode.FOLLOWING;
                         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
                                         mCurrentMode, true, mCurrentMarker));
@@ -79,7 +81,7 @@ public class LocationDemo extends Activity implements SensorEventListener {
                         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
                         break;
                     case COMPASS:
-                        requestLocButton.setText("普通");
+                        requestLocButton.setText("定位模式：普通");
                         mCurrentMode = LocationMode.NORMAL;
                         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
                                         mCurrentMode, true, mCurrentMarker));
@@ -88,7 +90,7 @@ public class LocationDemo extends Activity implements SensorEventListener {
                         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder1.build()));
                         break;
                     case FOLLOWING:
-                        requestLocButton.setText("罗盘");
+                        requestLocButton.setText("定位模式：罗盘");
                         mCurrentMode = LocationMode.COMPASS;
                         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
                                         mCurrentMode, true, mCurrentMarker));
@@ -107,17 +109,18 @@ public class LocationDemo extends Activity implements SensorEventListener {
                 if (checkedId == R.id.defaulticon) {
                     // 传入null则，恢复默认图标
                     mCurrentMarker = null;
-                    mBaiduMap
-                            .setMyLocationConfigeration(new MyLocationConfiguration(
-                                    mCurrentMode, true, null));
+                    MyLocationConfiguration locationConfiguration = new MyLocationConfiguration(mCurrentMode,
+                            true, null);
+                    mBaiduMap.setMyLocationConfiguration(locationConfiguration);
                 }
+
                 if (checkedId == R.id.customicon) {
                     // 修改为自定义marker
-                    mCurrentMarker = BitmapDescriptorFactory
-                            .fromResource(R.drawable.icon_geo);
-                    mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
-                                    mCurrentMode, true, mCurrentMarker,
-                                    accuracyCircleFillColor, accuracyCircleStrokeColor));
+                    mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+                    MyLocationConfiguration locationConfiguration = new MyLocationConfiguration(mCurrentMode,
+                            true, mCurrentMarker, accuracyCircleFillColor, accuracyCircleStrokeColor);
+
+                    mBaiduMap.setMyLocationConfiguration(locationConfiguration);
                 }
             }
         };
@@ -163,7 +166,7 @@ public class LocationDemo extends Activity implements SensorEventListener {
     /**
      * 定位SDK监听函数
      */
-    public class MyLocationListenner implements BDLocationListener {
+    public class MyLocationListenner extends BDAbstractLocationListener {
 
         @Override
         public void onReceiveLocation(BDLocation location) {

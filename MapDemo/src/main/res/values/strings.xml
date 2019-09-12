@@ -4,7 +4,7 @@
     <string name="app_name">百度地图SDK DEMO</string>
     <string name="demo_name_basemap">基本地图功能</string>
     <string name="demo_title_basemap">基本地图功能--BaseMapDemo</string>
-    <string name="demo_desc_basemap">创建一张百度地图并管理地图的生命周期, 包含个性化地图与普通地图切换功能</string>
+    <string name="demo_desc_basemap">创建地图并管理地图生命周期, 包含个性化地图使用</string>
     <string name="demo_name_map_fragment">基于MapFragment的基本地图</string>
     <string name="demo_title_map_fragment">MapFragment使用--MapFragmentDemo</string>
     <string name="demo_desc_map_fragment">创建一个基于Fragment的地图框架</string>
@@ -44,7 +44,7 @@
     <string name="demo_name_route">路径规划功能</string>
     <string name="demo_title_route">路径规划功能--RoutePlanDemo</string>
     <string name="demo_title_poinearby">POI附近搜索功能</string>
-    <string name="demo_desc_route">介绍跨城交通、公交、驾车、步行、骑行五种线路规划方法及自定义图标方法</string>
+    <string name="demo_desc_route">介绍跨城交通、公交、驾车、步行、骑行五种线路规划及自定义图标使用</string>
     <string name="demo_name_geocode">地理编码功能</string>
     <string name="demo_title_geocode">地理编码功能--GeoCodeDemo</string>
     <string name="demo_desc_geocode">介绍地址信息与坐标之间的相互转换</string>
@@ -84,6 +84,8 @@
     <string name="demo_track_show">小车轨迹平滑移动</string>
     <string name="demo_desc_track_show">介绍小车轨迹平滑移动的实现</string>
 
+    <string name="demo_title_custom_map_preview">个性化地图预览</string>
+    <string name="demo_desc_custom_map_preview">扫描二维码预览个性化地图编辑器生成的个性化地图样式</string>
 
 
     <string name="demo_desc_opengl">介绍如何使用OpenGL绘制在地图中进行绘制</string>
@@ -93,7 +95,7 @@
     <string name="cloud_search_tips"> \t\tLBS.云是百度地图针对LBS开发者推出的平台级服务。结合已有的地图API和SDK服务。通过开放服务端存储和计算能力,提供海量位置数据存储、检索、展示一体化解决方案。\n\n
           \t\t该服务对开发者免费开放。测试demo里写入了测试的ak。开发者可以使用测试ak查看 LBS.云检索的效果。如果开发者要使用自己的数据，请在申请ak后替换demo中的ak。\n\n
           \t\t如有任何关于LBS.云服务的问题,诸如如何申请ak、如何存储和检索数据等，请访问百度地图官方“LBS开放平台”。地址：http://lbsyun.baidu.com/  \n
-</string>
+    </string>
     <string name="panorama_tips">\t\t百度地图SDK为您免费提供全景图的功能。\n
       \t\t利用接口，可查询、开启并操作更丰富的全景图。\n
       \t\t以下三个示例分别向您展示了三种调启全景图的入口，您可在实际操作中灵活运用。\n
@@ -106,7 +108,7 @@
     <string name="share_tip">\t\t短串分享是指，用户搜索查询后得到的每一个地理位置结果将会对应一条短串（短链接），用户可以通过短信、邮件或第三方分享组件（如微博、微信等）把短串分享给其他用户从而实现地理位置信息的分享。当其他用户收到分享的短串后，点击短串即可打开手机上的百度地图客户端或者手机浏览器进行查看。\n\n
                 \t\t例如，用户搜索“百度大厦”后通过短信使用短串分享功能把该地点分享给好友，好友点击短信中的短串“http://j.map.baidu.com/XLCrk”后可以调起百度地图客户端或者手机浏览器查看“百度大厦”的地理位置信息。\n\n
                 \t\t目前短串分享功能暂时开放了“POI搜索结果分享”、“反向地理编码结果分享”和"路线规划路线结果分享(包含步行、骑行、驾车、公交)"，日后会开放更多的功能，欢迎广大开发者使用短串分享功能。
-</string>
+    </string>
     <string name="texturemap_hint">\t\t名称：TextureMapView（实现地图由TextureView
         渲染）\n\n
     \t\t前提：Android 4.0以上系统，并开启加速功能，才能使用TextureMapView \n\n

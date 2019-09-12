@@ -3,389 +3,395 @@
  */
 package baidumapsdk.demo.map;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PointF;
+import android.opengl.GLES20;
+import android.opengl.GLUtils;
+import android.opengl.Matrix;
+import android.os.Bundle;
+import android.util.Log;
+import baidumapsdk.demo.R;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMap.OnMapDrawFrameCallback;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.model.LatLng;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.microedition.khronos.opengles.GL10;
-
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMap.OnMapDrawFrameCallback;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.model.LatLng;
-
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.opengl.GLES20;
-import android.opengl.GLUtils;
-import android.os.Bundle;
-import android.util.Log;
-import baidumapsdk.demo.R;
 
 /**
  * 此demo用来展示如何在地图绘制的每帧中再额外绘制一些用户自己的内容
  */
 public class OpenglDemo extends Activity implements OnMapDrawFrameCallback {
 
-	private static final String LTAG = OpenglDemo.class.getSimpleName();
-	// 地图相关
-	MapView mMapView;
-	BaiduMap mBaiduMap;
-	Bitmap bitmap;
-	private LatLng latlng1 = new LatLng(39.97923, 116.357428);
-	LatLng latlng2 = new LatLng(39.94923, 116.397428);
-	LatLng latlng3 = new LatLng(39.96923, 116.437428);
-	private int mProgramObject;
-	private int mTexID;
-	private FloatBuffer mVertices;
-	private ShortBuffer mTexCoords;
-	private final float[] mVerticesData = { -0.5f, -0.5f, 0, 0.5f, -0.5f, 0, -0.5f, 0.5f, 0, 0.5f, 0.5f, 0 };
-	private final short[] mTexCoordsData = {0, 1, 1, 1, 0, 0, 1, 0};
-	private boolean mBfirst = false;
+    private static final String LTAG = OpenglDemo.class.getSimpleName();
+
+    // 地图相关
+    private MapView mMapView;
+    private BaiduMap mBaiduMap;
+
+    private LatLng latlng1 = new LatLng(39.97923, 116.357428);
+
+    private LatLng latlng2 = new LatLng(39.94923, 116.397428);
+    private LatLng latlng3 = new LatLng(39.96923, 116.437428);
+
+    private int mProgramObject;
+
+    private int mTexID;
+
+    // 2D矩形纹理坐标
+    private final short[] mTexCoordsData = {
+        0, 1,   // top left
+        1, 1,   // top right
+        0, 0,   // bottom left
+        1, 0    // bottom right
+    };
+
+    // 标识是否第一次绘制2D矩形
+    private boolean mIsFirstDraw2DRectangle = true;
+
+    // 标识是否第一次绘制3D立方体
+    private boolean mIsFirstDraw3DCube = true;
+
+    // 3D立方体顶点绘制顺序列表
+    private short[] mDrawIndices = {
+        0, 4, 5, 0, 5, 1, 1, 5, 6, 1, 6, 2, 2, 6, 7, 2, 7, 3, 3, 7, 4, 3, 4, 0, 4, 7, 6, 4, 6, 5, 3, 0, 1, 3, 1, 2
+    };
+
+    // 3D立方体8个顶点颜色值
+    private float[] mVertexColors = {
+        1f, 1f, 0f, 1f,
+        0f, 1f, 1f, 1f,
+        1f, 0f, 1f, 1f,
+        0f, 0f, 0f, 1f,
+        1f, 1f, 1f, 1f,
+        1f, 0f, 0f, 1f,
+        0f, 1f, 0f, 1f,
+        0f, 0f, 1f, 1f
+    };
+
+    // 立方体顶点坐标Buffer
+    private FloatBuffer mVertextBuffer;
+
+    // 顶点绘制顺序Buffer
+    private ShortBuffer mIndexBuffer;
+
+    // 立方体顶点颜色Buffer
+    private FloatBuffer mColorBuffer;
+
+    // 3D立方体着色器
+    private CubeShader mCubeShader;
 
 
-    private List<LatLng> latLngPolygon;
-	{
-		latLngPolygon = new ArrayList<LatLng>();
-		latLngPolygon.add(latlng1);
-		latLngPolygon.add(latlng2);
-		latLngPolygon.add(latlng3);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_opengl);
 
-	private float[] vertexs;
-	private FloatBuffer vertexBuffer;
+        // 初始化地图
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        mBaiduMap = mMapView.getMap();
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_opengl);
-		// 初始化地图
-		mMapView = (MapView) findViewById(R.id.bmapView);
+        mBaiduMap.setOnMapDrawFrameCallback(this);
 
-		mBaiduMap = mMapView.getMap();
-		mBaiduMap.setOnMapDrawFrameCallback(this);
-		bitmap = BitmapFactory.decodeResource(this.getResources(),
-				R.drawable.ground_overlay);
+        MapStatus.Builder builder = new MapStatus.Builder();
+        builder.target(latlng1).zoom(14.0f).overlook(-45.0f);
+        MapStatusUpdate msu = MapStatusUpdateFactory.newMapStatus(builder.build());
+        mBaiduMap.animateMapStatus(msu);
 
-        MarkerOptions marker1 = new MarkerOptions();
+        mBaiduMap.getUiSettings().setOverlookingGesturesEnabled(true);
+    }
 
-        marker1.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marka));
+    @Override
+    protected void onResume() {
+        mMapView.onResume();
+        super.onResume();
+    }
 
-        marker1.position(latlng2);
+    @Override
+    protected void onPause() {
+        mMapView.onPause();
+        super.onPause();
 
-        mBaiduMap.addOverlay(marker1);
+        mIsFirstDraw2DRectangle = true;
+        mIsFirstDraw3DCube = true;
+    }
 
-        MarkerOptions marker2 = new MarkerOptions();
-
-        marker2.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_markb));
-
-        marker2.position(latlng3);
-        mBaiduMap.addOverlay(marker2);
-
-	}
-
-	@Override
-	protected void onPause() {
-		mMapView.onPause();
-		super.onPause();
-        mBfirst = false;
-	}
-
-	@Override
-	protected void onResume() {
-		mMapView.onResume();
-		// onResume 纹理失效
-		textureId = -1;
-		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		mMapView.onDestroy();
-		super.onDestroy();
-	}
+    @Override
+    protected void onDestroy() {
+        mMapView.onDestroy();
+        super.onDestroy();
+    }
 
     @Deprecated
-	public void onMapDrawFrame(GL10 gl, MapStatus drawingMapStatus) {
-		if (mBaiduMap.getProjection() != null) {
-//			calPolylinePoint(drawingMapStatus);
-//			drawPolyline(gl, Color.argb(255, 255, 0, 0), vertexBuffer, 10, 3,
-//					drawingMapStatus);
-//			drawTexture(gl, bitmap, drawingMapStatus);
+    public void onMapDrawFrame(GL10 gl, MapStatus drawingMapStatus) {
 
-             drawFrame(drawingMapStatus);
-//            drawFrame2(drawingMapStatus);
-
-		}
-	}
+    }
 
     @Override
     public void onMapDrawFrame(MapStatus drawingMapStatus) {
-        if (mBaiduMap.getProjection() != null) {
-//			calPolylinePoint(drawingMapStatus);
-//			drawPolyline(gl, Color.argb(255, 255, 0, 0), vertexBuffer, 10, 3,
-//					drawingMapStatus);
-//			drawTexture(gl, bitmap, drawingMapStatus);
-
-            drawFrame(drawingMapStatus);
+        if (null == mBaiduMap.getProjection()) {
+            return;
         }
+
+        // 绘制2D 纹理矩形
+        drawFrameFor2DRectangle(drawingMapStatus);
+
+        // 绘制3D立方体
+        drawFrameFor3DCube(drawingMapStatus, 0.2f, 0.2f, 0.3f);
     }
 
+    private void drawFrameFor2DRectangle(MapStatus drawingMapStatus) {
+        // 采用屏幕坐标， 有抖动，有累计误差
+        PointF openGLPoint1 = mBaiduMap.getProjection().toOpenGLNormalization(latlng1 , drawingMapStatus);
+        PointF openGlPoint2 = mBaiduMap.getProjection().toOpenGLNormalization(latlng2 , drawingMapStatus);
 
-    // 采用屏幕坐标， 有抖动，有累计误差
-	private void drawFrame(MapStatus drawingMapStatus) {
+        // 矩形顶点坐标数据
+        float verticesData[] = new float[] {
+            openGLPoint1.x, openGLPoint1.y, 0.0f,
+            openGlPoint2.x, openGLPoint1.y, 0.0f,
+            openGLPoint1.x, openGlPoint2.y, 0.0f,
+            openGlPoint2.x, openGlPoint2.y, 0.0f
+        };
 
-        PointF p1f = mBaiduMap.getProjection().toOpenGLNormalization(latlng2 , drawingMapStatus);
-        PointF p2f = mBaiduMap.getProjection().toOpenGLNormalization(latlng3 , drawingMapStatus);
+        FloatBuffer verticesBuffer = ByteBuffer.allocateDirect(verticesData.length * 4)
+            .order(ByteOrder.nativeOrder())
+            .asFloatBuffer();
+        verticesBuffer.put(verticesData).position(0);
 
-        float mVerticesData[] = new float[] { p1f.x, p1f.y, 0.0f, p2f.x, p1f.y, 0.0f, p1f.x,
-				p2f.y, 0.0f, p2f.x, p2f.y, 0.0f };
-		mVertices = ByteBuffer.allocateDirect(mVerticesData.length * 4)
-				.order(ByteOrder.nativeOrder()).asFloatBuffer();
-		mVertices.put(mVerticesData).position(0);
+        ShortBuffer texCoords = ByteBuffer.allocateDirect(mTexCoordsData.length * 2)
+            .order(ByteOrder.nativeOrder())
+            .asShortBuffer();
+        texCoords.put(mTexCoordsData).position(0);
 
-        mTexCoords = ByteBuffer.allocateDirect(mTexCoordsData.length * 2)
-                .order(ByteOrder.nativeOrder()).asShortBuffer();
-        mTexCoords.put(mTexCoordsData).position(0);
-        if(!mBfirst) {
+        if(mIsFirstDraw2DRectangle) {
             comipleShaderAndLinkProgram();
             loadTexture();
-            mBfirst = true;
+            mIsFirstDraw2DRectangle = false;
         }
 
         GLES20.glUseProgram(mProgramObject);
 
-		GLES20.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 0, mVertices);
+        GLES20.glVertexAttribPointer(0, 3, GLES20.GL_FLOAT, false, 0, verticesBuffer);
         GLES20.glEnableVertexAttribArray(0);
 
-        GLES20.glVertexAttribPointer(1, 2, GLES20.GL_SHORT, false, 0, mTexCoords);
+        GLES20.glVertexAttribPointer(1, 2, GLES20.GL_SHORT, false, 0, texCoords);
         GLES20.glEnableVertexAttribArray(1);
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTexID);
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
-	}
+    }
 
 
-	private void comipleShaderAndLinkProgram() {
-		final String vShaderStr = "attribute vec4 a_position;    \n"
-				+"attribute vec2 a_texCoords; \n"
-				+"varying vec2 v_texCoords; \n"
-				+ "void main()                  \n"
-				+ "{                            \n"
-				+ "   gl_Position = a_position;  \n"
-				+"    v_texCoords = a_texCoords; \n"
-				+ "}                            \n";
-		final String fShaderStr = "precision mediump float;                     \n"
-				+"uniform sampler2D u_Texture; \n"
-				+"varying vec2 v_texCoords; \n"
-				+ "void main()                                  \n"
-				+ "{                                            \n"
-				+ "  gl_FragColor = texture2D(u_Texture, v_texCoords) ;\n"
-				+ "}                                            \n";
-		int vertexShader;
-		int fragmentShader;
-		int programObject;
-		int[] linked = new int[1];
-		// Load the vertex/fragment shaders
-		vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vShaderStr);
-		fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fShaderStr);
-		// Create the program object
-		programObject = GLES20.glCreateProgram();
-		if (programObject == 0) {
-			return ;
+    private void comipleShaderAndLinkProgram() {
+        final String vShaderStr = "attribute vec4 a_position;\n"
+                + "attribute vec2 a_texCoords;\n"
+                + "varying vec2 v_texCoords;\n"
+                + "void main()\n"
+                + "{\n"
+                + "gl_Position = a_position;\n"
+                + "v_texCoords = a_texCoords;\n"
+                + "}\n";
 
-		}
+        final String fShaderStr = "precision mediump float;\n"
+                + "uniform sampler2D u_Texture;\n"
+                + "varying vec2 v_texCoords;\n"
+                + "void main()\n"
+                + "{\n"
+                + "gl_FragColor = texture2D(u_Texture, v_texCoords);\n"
+                + "}\n";
 
-		GLES20.glAttachShader(programObject, vertexShader);
-		GLES20.glAttachShader(programObject, fragmentShader);
-		// Bind vPosition to attribute 0
-		GLES20.glBindAttribLocation(programObject, 0, "a_position");
-		GLES20.glBindAttribLocation(programObject, 1, "a_texCoords");
-		// Link the program
-		GLES20.glLinkProgram(programObject);
-		// Check the link status
-		GLES20.glGetProgramiv(programObject, GLES20.GL_LINK_STATUS, linked, 0);
-		if (linked[0] == 0) {
-			Log.e(LTAG, "Error linking program:");
-			Log.e(LTAG, GLES20.glGetProgramInfoLog(programObject));
-			GLES20.glDeleteProgram(programObject);
-			return  ;
-		}
-		mProgramObject = programObject;
-	}
-	private int loadShader(int shaderType, String shaderSource) {
-		int shader;
-		int[] compiled = new int[1];
-		// Create the shader object
-		shader = GLES20.glCreateShader(shaderType);
-		if (shader == 0) {
-			return 0;
+        int[] linked = new int[1];
+        // Load the vertex/fragment shaders
+        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vShaderStr);
+        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fShaderStr);
+        // Create the program object
+        int programObject = GLES20.glCreateProgram();
+        if (programObject == 0) {
+            return ;
+        }
 
-		}
-		// Load the shader source
-		GLES20.glShaderSource(shader, shaderSource);
-		// Compile the shader
-		GLES20.glCompileShader(shader);
-		// Check the compile status
-		GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
-		if (compiled[0] == 0) {
-			Log.e(LTAG, GLES20.glGetShaderInfoLog(shader));
-			GLES20.glDeleteShader(shader);
-			return 0;
-		}
-		return shader;
-	}
-	private void loadTexture() {
-		bitmap = BitmapFactory.decodeResource(this.getResources(),
-				R.drawable.ground_overlay);
-		if (bitmap != null) {
-			int []texID = new int[1];
-			GLES20.glGenTextures(1, texID, 0);
-			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texID[0]);
-			mTexID = texID[0];
-			GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER,
-					GLES20.GL_LINEAR);
-			GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER,
-					GLES20.GL_LINEAR);
+        GLES20.glAttachShader(programObject, vertexShader);
+        GLES20.glAttachShader(programObject, fragmentShader);
 
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,
-					GLES20.GL_REPEAT);
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
-					GLES20.GL_REPEAT);
+        // Bind vPosition to attribute 0
+        GLES20.glBindAttribLocation(programObject, 0, "a_position");
+        GLES20.glBindAttribLocation(programObject, 1, "a_texCoords");
 
-			GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
-			bitmap.recycle();
-		}
-	}
-	public void calPolylinePoint(MapStatus mspStatus) {
-		PointF[] polyPoints = new PointF[latLngPolygon.size()];
-		vertexs = new float[3 * latLngPolygon.size()];
-		int i = 0;
-		for (LatLng xy : latLngPolygon) {
-			polyPoints[i] = mBaiduMap.getProjection().toOpenGLLocation(xy,
-					mspStatus);
-			vertexs[i * 3] = polyPoints[i].x;
-			vertexs[i * 3 + 1] = polyPoints[i].y;
-			vertexs[i * 3 + 2] = 0.0f;
-			i++;
-		}
-		for (int j = 0; j < vertexs.length; j++) {
-			Log.d(LTAG, "vertexs[" + j + "]: " + vertexs[j]);
-		}
-		vertexBuffer = makeFloatBuffer(vertexs);
-	}
+        // Link the program
+        GLES20.glLinkProgram(programObject);
+        // Check the link status
+        GLES20.glGetProgramiv(programObject, GLES20.GL_LINK_STATUS, linked, 0);
 
-	private FloatBuffer makeFloatBuffer(float[] fs) {
-		ByteBuffer bb = ByteBuffer.allocateDirect(fs.length * 4);
-		bb.order(ByteOrder.nativeOrder());
-		FloatBuffer fb = bb.asFloatBuffer();
-		fb.put(fs);
-		fb.position(0);
-		return fb;
-	}
+        if (linked[0] == 0) {
+            Log.e(LTAG, "Error linking program:");
+            Log.e(LTAG, GLES20.glGetProgramInfoLog(programObject));
+            GLES20.glDeleteProgram(programObject);
+            return  ;
+        }
 
-	private void drawPolyline(GL10 gl, int color, FloatBuffer lineVertexBuffer,
-			float lineWidth, int pointSize, MapStatus drawingMapStatus) {
+        mProgramObject = programObject;
+    }
 
-		gl.glEnable(GL10.GL_BLEND);
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+    private int loadShader(int shaderType, String shaderSource) {
+        int shader;
+        int[] compiled = new int[1];
+        // Create the shader object
+        shader = GLES20.glCreateShader(shaderType);
+        if (shader == 0) {
+            return 0;
+        }
 
-		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        // Load the shader source
+        GLES20.glShaderSource(shader, shaderSource);
+        // Compile the shader
+        GLES20.glCompileShader(shader);
+        // Check the compile status
+        GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
+        if (compiled[0] == 0) {
+            Log.e(LTAG, GLES20.glGetShaderInfoLog(shader));
+            GLES20.glDeleteShader(shader);
+            return 0;
+        }
 
-		float colorA = Color.alpha(color) / 255f;
-		float colorR = Color.red(color) / 255f;
-		float colorG = Color.green(color) / 255f;
-		float colorB = Color.blue(color) / 255f;
+        return shader;
+    }
 
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, lineVertexBuffer);
-		gl.glColor4f(colorR, colorG, colorB, colorA);
-		gl.glLineWidth(lineWidth);
-		gl.glDrawArrays(GL10.GL_LINE_STRIP, 0, pointSize);
+    private void loadTexture() {
+        Bitmap textureBitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ground_overlay);
+        if (null == textureBitmap) {
+            return;
+        }
 
-		gl.glDisable(GL10.GL_BLEND);
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-	}
-	int textureId = -1;
-	/**
-	 * 使用opengl坐标绘制
-	 * 
-	 * @param gl
-	 * @param bitmap
-	 * @param drawingMapStatus
-	 */
-	public void drawTexture(GL10 gl, Bitmap bitmap, MapStatus drawingMapStatus) {
-		PointF p1 = mBaiduMap.getProjection().toOpenGLLocation(latlng2,
-				drawingMapStatus);
-		PointF p2 = mBaiduMap.getProjection().toOpenGLLocation(latlng3,
-				drawingMapStatus);
-		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * 3 * 4);
-		byteBuffer.order(ByteOrder.nativeOrder());
-		FloatBuffer vertices = byteBuffer.asFloatBuffer();
-		vertices.put(new float[] { p1.x, p1.y, 0.0f, p2.x, p1.y, 0.0f, p1.x,
-				p2.y, 0.0f, p2.x, p2.y, 0.0f });
+        int []texID = new int[1];
+        GLES20.glGenTextures(1, texID, 0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texID[0]);
+        mTexID = texID[0];
 
-		ByteBuffer indicesBuffer = ByteBuffer.allocateDirect(6 * 2);
-		indicesBuffer.order(ByteOrder.nativeOrder());
-		ShortBuffer indices = indicesBuffer.asShortBuffer();
-		indices.put(new short[] { 0, 1, 2, 1, 2, 3 });
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
 
-		ByteBuffer textureBuffer = ByteBuffer.allocateDirect(4 * 2 * 4);
-		textureBuffer.order(ByteOrder.nativeOrder());
-		FloatBuffer texture = textureBuffer.asFloatBuffer();
-		texture.put(new float[] { 0, 1f, 1f, 1f, 0f, 0f, 1f, 0f });
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
 
-		indices.position(0);
-		vertices.position(0);
-		texture.position(0);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, textureBitmap, 0);
 
-		// 生成纹理
-		if (textureId == -1) {
-			int textureIds[] = new int[1];
-			gl.glGenTextures(1, textureIds, 0);
-			textureId = textureIds[0];
-			Log.d(LTAG, "textureId: " + textureId);
-			gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
-			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER,
-					GL10.GL_NEAREST);
-			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER,
-					GL10.GL_NEAREST);
-			gl.glBindTexture(GL10.GL_TEXTURE_2D, 0);
-		}
-	
-		gl.glEnable(GL10.GL_TEXTURE_2D);
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		gl.glEnable(GL10.GL_BLEND);
-		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        textureBitmap.recycle();
+    }
 
-		// 绑定纹理ID
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texture);
+    private void drawFrameFor3DCube(MapStatus drawingMapStatus, float width, float height, float depth) {
+        if (null == drawingMapStatus) {
+            return;
+        }
 
-		gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, 6, GL10.GL_UNSIGNED_SHORT,
-				indices);
+        if (mIsFirstDraw3DCube) {
+            initCubeModelData(width, height, depth);
 
-		gl.glDisable(GL10.GL_TEXTURE_2D);
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-		gl.glDisable(GL10.GL_BLEND);
-	}
+            initCubeShader();
+            
+            mIsFirstDraw3DCube = false;
+        }
 
+        drawCube(drawingMapStatus);
+    }
 
+    private void initCubeModelData(float width, float height, float depth) {
+        // 对标墨卡托坐标
+        width = width * 10000 / 2;
+        height = height * 10000 / 2;
+        depth = depth * 10000 / 2;
+
+        // 立方体8个顶点坐标
+        float[] vertices = {
+            -width, -height, -0,
+            width, -height, -0,
+            width, height, -0,
+            -width, height, -0,
+            -width, -height, depth,
+            width, -height, depth,
+            width, height, depth,
+            -width, height, depth,
+        };
+
+        mVertextBuffer = ByteBuffer.allocateDirect(vertices.length * 4)
+            .order(ByteOrder.nativeOrder())
+            .asFloatBuffer();
+        mVertextBuffer.put(vertices).position(0);
+
+        // 立方体顶点绘制顺序Buffer
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(mDrawIndices.length * 4);
+        byteBuffer.order(ByteOrder.nativeOrder());
+        mIndexBuffer = byteBuffer.asShortBuffer();
+        mIndexBuffer.put(mDrawIndices);
+        mIndexBuffer.position(0);
+
+        // 立方体顶点颜色Buffer
+        ByteBuffer byteBuffer1 = ByteBuffer.allocateDirect(mVertexColors.length * 4);
+        byteBuffer1.order(ByteOrder.nativeOrder());
+        mColorBuffer = byteBuffer1.asFloatBuffer();
+        mColorBuffer.put(mVertexColors);
+        mColorBuffer.position(0);
+    }
+
+    private void initCubeShader() {
+        mCubeShader = new CubeShader();
+        mCubeShader.init();
+    }
+
+    private void drawCube(MapStatus drawingMapStatus) {
+        if (null == mCubeShader || null == drawingMapStatus) {
+            return;
+        }
+
+        // Step1 初始化数据
+        float[] mvpMatrix = new float[16];
+        Matrix.setIdentityM(mvpMatrix, 0);
+
+        // 获取投影矩阵
+        float[] projectMatrix = mBaiduMap.getProjectionMatrix();
+        // 获取视图矩阵
+        float[] viewMatrix = mBaiduMap.getViewMatrix();
+
+        Matrix.multiplyMM(mvpMatrix,0, projectMatrix,0, viewMatrix,0);
+
+        // 绑定地图移动
+        PointF p1f = mBaiduMap.getProjection().toOpenGLLocation(latlng1, drawingMapStatus);
+        Matrix.translateM(mvpMatrix, 0 , p1f.x, p1f.y, 0);
+
+        // 设置缩放比例
+        int scale = 1;
+        Matrix.scaleM(mvpMatrix, 0 , scale, scale, scale);
+
+        // Step2 开始绘制设置
+        GLES20.glUseProgram(mCubeShader.mProgram);
+
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+
+        // 顶点指针
+        GLES20.glEnableVertexAttribArray(mCubeShader.mVertex);
+        GLES20.glVertexAttribPointer(mCubeShader.mVertex, 3, GLES20.GL_FLOAT, false, 0, mVertextBuffer);
+
+        // 颜色指针
+        GLES20.glEnableVertexAttribArray(mCubeShader.mColor);
+        GLES20.glVertexAttribPointer(mCubeShader.mColor, 4, GLES20.GL_FLOAT,false, 0, mColorBuffer);
+
+        GLES20.glUniformMatrix4fv(mCubeShader.mMvpMatrix, 1, false, mvpMatrix, 0);
+
+        // 开始画
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, mDrawIndices.length, GLES20.GL_UNSIGNED_SHORT, mIndexBuffer);
+        GLES20.glDisableVertexAttribArray(mCubeShader.mVertex);
+
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+    }
 
     /**
      * Convert width to openGL width
@@ -394,7 +400,6 @@ public class OpenglDemo extends Activity implements OnMapDrawFrameCallback {
      * @return Width in openGL
      */
     public static float toGLWidth2(float width, MapStatus mapStatus) {
-
         float winRoundW = (float) Math.abs(mapStatus.winRound.right - mapStatus.winRound.left);
 
         return 2 * width / winRoundW - 1;
@@ -407,10 +412,56 @@ public class OpenglDemo extends Activity implements OnMapDrawFrameCallback {
      * @return Height in openGL
      */
     public static float toGLHeight2(float height, MapStatus mapStatus) {
-
         float winRoundH = (float) Math.abs(mapStatus.winRound.top - mapStatus.winRound.bottom);
+
         return 1 - 2 * height / winRoundH;
     }
 
+    private class CubeShader {
+        int mVertex;
+        int mMvpMatrix;
+        int mColor;
+        int mProgram;
+
+        public CubeShader() {
+
+        }
+
+        String vertexShader = "precision highp float;\n" +
+            "        attribute vec3 mVertex;//顶点数组,三维坐标\n" +
+            "        attribute vec4 mColor;//颜色数组,三维坐标\n" +
+            "        uniform mat4 mMvpMatrix;//mvp矩阵\n" +
+            "        varying vec4 color;//\n" +
+            "        void main(){\n" +
+            "            gl_Position = mMvpMatrix * vec4(mVertex, 1.0);\n" +
+            "            color = mColor;\n" +
+            "        }";
+
+        String fragmentShader = "//有颜色 没有纹理\n" +
+            "        precision highp float;\n" +
+            "        varying vec4 color;//\n" +
+            "        void main(){\n" +
+            "            gl_FragColor = color;\n" +
+            "        }";
+
+        public void init() {
+            int vertexLocation = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+            GLES20.glShaderSource(vertexLocation, vertexShader);
+            GLES20.glCompileShader(vertexLocation);
+
+            int fragmentLocation = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+            GLES20.glShaderSource(fragmentLocation, fragmentShader);
+            GLES20.glCompileShader(fragmentLocation);
+
+            mProgram = GLES20.glCreateProgram();
+            GLES20.glAttachShader(mProgram, vertexLocation);
+            GLES20.glAttachShader(mProgram, fragmentLocation);
+            GLES20.glLinkProgram(mProgram);
+
+            mVertex  = GLES20.glGetAttribLocation(mProgram, "mVertex");
+            mMvpMatrix = GLES20.glGetUniformLocation(mProgram,"mMvpMatrix");
+            mColor = GLES20.glGetAttribLocation(mProgram,"mColor");
+        }
+    }
 
 }

@@ -3,17 +3,9 @@
  */
 package baidumapsdk.demo.map;
 
-import android.app.Activity;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import baidumapsdk.demo.R;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.FileTileProvider;
 import com.baidu.mapapi.map.MapStatus;
@@ -27,8 +19,18 @@ import com.baidu.mapapi.map.TileProvider;
 import com.baidu.mapapi.map.UrlTileProvider;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
+
+import android.app.Activity;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import baidumapsdk.demo.R;
 
 
 /**
@@ -52,8 +54,8 @@ public class TileOverlayDemo extends Activity implements BaiduMap.OnMapLoadedCal
     TileOverlay tileOverlay;
     Tile offlineTile;
     MapStatusUpdate mMapStatusUpdate;
-    private  final String onlineUrl = "http://api0.map.bdimg.com/customimage/tile"
-            + "?&x={x}&y={y}&z={z}&udt=20150601&customid=light";
+    private  final String onlineUrl = "http://online1.map.bdimg.com/tile/?qt=vtile&x={x}&y={y}&z={z}&styles=pl&scaler"
+            + "=1&udt=20190528";
     private boolean mapLoaded = false;
 
     @Override
@@ -94,8 +96,10 @@ public class TileOverlayDemo extends Activity implements BaiduMap.OnMapLoadedCal
      */
     private void onlineTile() {
 
-        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-        if (tileOverlay != null && mBaiduMap != null) {
+        if (null != mBaiduMap) {
+            mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        }
+        if (tileOverlay != null) {
             tileOverlay.removeTileOverlay();
         }
         final String urlString = mEditText.getText().toString();
@@ -146,7 +150,7 @@ public class TileOverlayDemo extends Activity implements BaiduMap.OnMapLoadedCal
      * 瓦片图的离线添加
      */
     private void offlineTile() {
-        if (tileOverlay != null && mBaiduMap != null) {
+        if (tileOverlay != null) {
             tileOverlay.removeTileOverlay();
         }
 
@@ -189,7 +193,10 @@ public class TileOverlayDemo extends Activity implements BaiduMap.OnMapLoadedCal
         options.tileProvider(tileProvider)
                 .setPositionFromBounds(new LatLngBounds.Builder().include(northeast).include(southwest).build());
         // 通过option指定相关属性，向地图添加离线瓦片图对象
-        tileOverlay = mBaiduMap.addTileLayer(options);
+        if (mBaiduMap != null) {
+            tileOverlay = mBaiduMap.addTileLayer(options);
+        }
+
         if (mapLoaded) {
             setMapStatusLimits();
         }

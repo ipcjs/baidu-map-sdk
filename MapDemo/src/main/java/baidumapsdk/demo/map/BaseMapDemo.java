@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,53 +27,73 @@ import java.io.InputStream;
 
 /**
  * 演示MapView的基本用法
+ * 同时示例个性化地图的基本使用
+ * 并且作为个性化编辑器样式预览的个性化地图展示
  */
 public class BaseMapDemo extends Activity {
 
     @SuppressWarnings("unused")
     private static final String LTAG = BaseMapDemo.class.getSimpleName();
+
     private MapView mMapView;
+
     FrameLayout layout;
-    private boolean mEnableCustomStyle = true;
+
     private static final int OPEN_ID = 0;
     private static final int CLOSE_ID = 1;
+
     //用于设置个性化地图的样式文件
-    // 精简为1套样式模板:
-    // "custom_config_dark.json"
-    private static String PATH = "custom_config_dark.json";
-    private static int icon_themeId = 1;
+    private static final String CUSTOM_FILE_NAME = "custom_map_config.json";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MapStatus.Builder builder = new MapStatus.Builder();
-        LatLng center = new LatLng(39.915071, 116.403907); // 默认 天安门
-        float zoom = 11.0f; // 默认 11级
+        // 默认值为0，即使用本地加载方式
+        int loadCustomStyleFileMode = 0;
 
-        /* 该Intent是OfflineDemo中查看离线地图调起的 */
         Intent intent = getIntent();
-        if (null != intent) {
-            mEnableCustomStyle = intent.getBooleanExtra("customStyle", true);
-            center = new LatLng(intent.getDoubleExtra("y", 39.915071),
-                    intent.getDoubleExtra("x", 116.403907));
-            zoom = intent.getFloatExtra("level", 11.0f);
+        if (intent.hasExtra("loadCustomStyleFileMode")) {
+            // 当用intent参数时，设置中心点为指定点
+            Bundle bundle = intent.getExtras();
+            loadCustomStyleFileMode = bundle.getInt("loadCustomStyleFileMode");
         }
-        builder.target(center).zoom(zoom);
-
 
         /**
+         * 本地加载个性化地图样式
          * MapView (TextureMapView)的
          * {@link MapView.setCustomMapStylePath(String customMapStylePath)}
          * 方法一定要在MapView(TextureMapView)创建之前调用。
          * 如果是setContentView方法通过布局加载MapView(TextureMapView), 那么一定要放置在
          * MapView.setCustomMapStylePath方法之后执行，否则个性化地图不会显示
          */
-        setMapCustomFile(this, PATH);
+        // loadCustomStyleFileMode == 0 说明是本地样式文件加载；loadCustomStyleFileMode == 1编辑器样式预览
+        if (0 == loadCustomStyleFileMode) {
+            setMapCustomFile(this, CUSTOM_FILE_NAME);
+        }
+
+        /**
+         * 个性化地图样式文件加载方式，当前只提供两种方式：
+         * 0 —— 本地加载；
+         * 1 —— 编辑器样式预览
+         * 默认值为0，即使用本地加载方式时，该方法可以不调用。如果使用编辑器样式预览，需要调用该方法
+         *
+         * 该方法一定要在MapView(TextureMapView)创建之前调用。
+         * 如果是setContentView方法通过布局加载MapView(TextureMapView), 那么一定要放置在
+         * MapView.setCustomMapStylePath方法之后执行，否则个性化地图不会显示。
+         */
+        MapView.setLoadCustomMapStyleFileMode(loadCustomStyleFileMode);
 
         mMapView = new MapView(this, new BaiduMapOptions());
         initView(this);
         setContentView(layout);
+
+        MapStatus.Builder builder = new MapStatus.Builder();
+        LatLng center = new LatLng(39.998152, 116.276973); // 颐和园
+        float zoom = 14.5f; // 地图缩放级别
+        builder.target(center).zoom(zoom);
+        mMapView.getMap().setMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
         MapView.setMapCustomEnable(true);
     }
@@ -80,31 +102,29 @@ public class BaseMapDemo extends Activity {
     private void initView(Context context) {
         layout = new FrameLayout(this);
         layout.addView(mMapView);
+
         RadioGroup group = new RadioGroup(context);
-        group.setBackgroundColor(Color.BLACK);
+        group.setBackgroundColor(Color.GRAY);
+        // 个性化开关水平排列
+        group.setOrientation(LinearLayout.HORIZONTAL);
+        group.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT);
+
         final RadioButton openBtn = new RadioButton(context);
         openBtn.setText("开启个性化地图");
         openBtn.setId(OPEN_ID);
         openBtn.setTextColor(Color.WHITE);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-
         group.addView(openBtn, params);
+
         final RadioButton closeBtn = new RadioButton(context);
         closeBtn.setText("关闭个性化地图");
         closeBtn.setTextColor(Color.WHITE);
         closeBtn.setId(CLOSE_ID);
         group.addView(closeBtn, params);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        if (mEnableCustomStyle) {
-            openBtn.setChecked(true);
-        } else {
-            closeBtn.setChecked(true);
-        }
-
-        layout.addView(group, layoutParams);
+        // 默认打开个性化地图
+        openBtn.setChecked(true);
 
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -116,6 +136,10 @@ public class BaseMapDemo extends Activity {
                 }
             }
         });
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT);
+        layout.addView(group, layoutParams);
     }
 
     // 设置个性化地图config文件路径
@@ -123,9 +147,9 @@ public class BaseMapDemo extends Activity {
         FileOutputStream out = null;
         InputStream inputStream = null;
         String moduleName = null;
+
         try {
-            inputStream = context.getAssets()
-                    .open("customConfigdir/" + PATH);
+            inputStream = context.getAssets().open("customConfigdir/" + PATH);
             byte[] b = new byte[inputStream.available()];
             inputStream.read(b);
 
@@ -135,6 +159,7 @@ public class BaseMapDemo extends Activity {
                 f.delete();
             }
             f.createNewFile();
+
             out = new FileOutputStream(f);
             out.write(b);
         } catch (IOException e) {
@@ -156,17 +181,6 @@ public class BaseMapDemo extends Activity {
 
     }
 
-    /**
-     * 设置个性化icon
-     *
-     * @param context
-     * @param icon_themeId
-     */
-    private void setIconCustom(Context context, int icon_themeId){
-
-       MapView.setIconCustom(icon_themeId);
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -184,8 +198,9 @@ public class BaseMapDemo extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // activity 销毁时同时销毁地图控件
+        // 销毁地图前线关闭个性化地图，否则会出现资源无法释放
         MapView.setMapCustomEnable(false);
+        // activity 销毁时同时销毁地图控件
         mMapView.onDestroy();
     }
 

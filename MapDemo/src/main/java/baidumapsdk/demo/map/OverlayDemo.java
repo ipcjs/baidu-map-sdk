@@ -47,40 +47,42 @@ public class OverlayDemo extends Activity {
     private Marker mMarkerC;
     private Marker mMarkerD;
     private InfoWindow mInfoWindow;
-    private SeekBar alphaSeekBar = null;
     private CheckBox animationBox = null;
 
-    // 初始化全局 bitmap 信息，不用时及时 recycle
-    BitmapDescriptor bdA = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_marka);
-    BitmapDescriptor bdB = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_markb);
-    BitmapDescriptor bdC = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_markc);
-    BitmapDescriptor bdD = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_markd);
-    BitmapDescriptor bd = BitmapDescriptorFactory
-            .fromResource(R.drawable.icon_gcoding);
-    BitmapDescriptor bdGround = BitmapDescriptorFactory
-            .fromResource(R.drawable.ground_overlay);
+    /**
+     * 初始化全局 bitmap 信息，不用时及时 recycle
+     */
+    BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
+    BitmapDescriptor bdB = BitmapDescriptorFactory.fromResource(R.drawable.icon_markb);
+    BitmapDescriptor bdC = BitmapDescriptorFactory.fromResource(R.drawable.icon_markc);
+    BitmapDescriptor bdD = BitmapDescriptorFactory.fromResource(R.drawable.icon_markd);
+    BitmapDescriptor bd = BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding);
+    BitmapDescriptor bdGround = BitmapDescriptorFactory.fromResource(R.drawable.ground_overlay);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overlay);
-        alphaSeekBar = (SeekBar) findViewById(R.id.alphaBar);
+
+        SeekBar alphaSeekBar = (SeekBar) findViewById(R.id.alphaBar);
         alphaSeekBar.setOnSeekBarChangeListener(new SeekBarListener());
+
         animationBox = (CheckBox) findViewById(R.id.animation);
+
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
+
         MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(14.0f);
         mBaiduMap.setMapStatus(msu);
+
         initOverlay();
+
         mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
             public boolean onMarkerClick(final Marker marker) {
                 Button button = new Button(getApplicationContext());
                 button.setBackgroundResource(R.drawable.popup);
                 OnInfoWindowClickListener listener = null;
+
                 if (marker == mMarkerA || marker == mMarkerD) {
                     button.setText("更改位置");
                     button.setTextColor(Color.BLACK);
@@ -95,6 +97,7 @@ public class OverlayDemo extends Activity {
                             mBaiduMap.hideInfoWindow();
                         }
                     };
+
                     LatLng ll = marker.getPosition();
                     mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
                     mBaiduMap.showInfoWindow(mInfoWindow);
@@ -107,6 +110,7 @@ public class OverlayDemo extends Activity {
                             mBaiduMap.hideInfoWindow();
                         }
                     });
+
                     LatLng ll = marker.getPosition();
                     mInfoWindow = new InfoWindow(button, ll, -47);
                     mBaiduMap.showInfoWindow(mInfoWindow);
@@ -119,10 +123,12 @@ public class OverlayDemo extends Activity {
                             mBaiduMap.hideInfoWindow();
                         }
                     });
+
                     LatLng ll = marker.getPosition();
                     mInfoWindow = new InfoWindow(button, ll, -47);
                     mBaiduMap.showInfoWindow(mInfoWindow);
                 }
+
                 return true;
             }
         });
@@ -135,22 +141,27 @@ public class OverlayDemo extends Activity {
         LatLng llC = new LatLng(39.939723, 116.425541);
         LatLng llD = new LatLng(39.906965, 116.401394);
 
-        MarkerOptions ooA = new MarkerOptions().position(llA).icon(bdA)
-                .zIndex(9).draggable(true);
+        MarkerOptions ooA = new MarkerOptions().position(llA).icon(bdA).zIndex(9).draggable(true);
         if (animationBox.isChecked()) {
             // 掉下动画
             ooA.animateType(MarkerAnimateType.drop);
         }
         mMarkerA = (Marker) (mBaiduMap.addOverlay(ooA));
-        MarkerOptions ooB = new MarkerOptions().position(llB).icon(bdB)
-                .zIndex(5);
+
+        MarkerOptions ooB = new MarkerOptions().position(llB).icon(bdB).zIndex(5);
         if (animationBox.isChecked()) {
             // 掉下动画
             ooB.animateType(MarkerAnimateType.drop);
         }
         mMarkerB = (Marker) (mBaiduMap.addOverlay(ooB));
-        MarkerOptions ooC = new MarkerOptions().position(llC).icon(bdC)
-                .perspective(false).anchor(0.5f, 0.5f).rotate(30).zIndex(7);
+
+        MarkerOptions ooC = new MarkerOptions()
+            .position(llC)
+            .icon(bdC)
+            .perspective(false)
+            .anchor(0.5f, 0.5f)
+            .rotate(30)
+            .zIndex(7);
         if (animationBox.isChecked()) {
             // 生长动画
             ooC.animateType(MarkerAnimateType.grow);
@@ -160,8 +171,8 @@ public class OverlayDemo extends Activity {
         giflist.add(bdA);
         giflist.add(bdB);
         giflist.add(bdC);
-        MarkerOptions ooD = new MarkerOptions().position(llD).icons(giflist)
-                .zIndex(0).period(10);
+
+        MarkerOptions ooD = new MarkerOptions().position(llD).icons(giflist).zIndex(0).period(10);
         if (animationBox.isChecked()) {
             // 生长动画
             ooD.animateType(MarkerAnimateType.grow);
@@ -171,26 +182,26 @@ public class OverlayDemo extends Activity {
         // add ground overlay
         LatLng southwest = new LatLng(39.92235, 116.380338);
         LatLng northeast = new LatLng(39.947246, 116.414977);
-        LatLngBounds bounds = new LatLngBounds.Builder().include(northeast)
-                .include(southwest).build();
+        LatLngBounds bounds = new LatLngBounds.Builder().include(northeast).include(southwest).build();
 
         OverlayOptions ooGround = new GroundOverlayOptions()
-                .positionFromBounds(bounds).image(bdGround).transparency(0.8f);
+            .positionFromBounds(bounds)
+            .image(bdGround)
+            .transparency(0.8f);
         mBaiduMap.addOverlay(ooGround);
 
-        MapStatusUpdate u = MapStatusUpdateFactory
-                .newLatLng(bounds.getCenter());
+        MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(bounds.getCenter());
         mBaiduMap.setMapStatus(u);
 
         mBaiduMap.setOnMarkerDragListener(new OnMarkerDragListener() {
             public void onMarkerDrag(Marker marker) {
+
             }
 
             public void onMarkerDragEnd(Marker marker) {
                 Toast.makeText(
                         OverlayDemo.this,
-                        "拖拽结束，新位置：" + marker.getPosition().latitude + ", "
-                                + marker.getPosition().longitude,
+                        "拖拽结束，新位置：" + marker.getPosition().latitude + ", " + marker.getPosition().longitude,
                         Toast.LENGTH_LONG).show();
             }
 
@@ -225,19 +236,20 @@ public class OverlayDemo extends Activity {
     private class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
 
         @Override
-        public void onProgressChanged(SeekBar seekBar, int progress,
-                                      boolean fromUser) {
-            // TODO Auto-generated method stub
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             float alpha = ((float) seekBar.getProgress()) / 10;
             if (mMarkerA != null) {
                 mMarkerA.setAlpha(alpha);
             }
+
             if (mMarkerB != null) {
                 mMarkerB.setAlpha(alpha);
             }
+
             if (mMarkerC != null) {
                 mMarkerC.setAlpha(alpha);
             }
+
             if (mMarkerD != null) {
                 mMarkerD.setAlpha(alpha);
             }
@@ -245,14 +257,13 @@ public class OverlayDemo extends Activity {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
+
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
-        }
 
+        }
     }
 
     @Override
@@ -274,6 +285,7 @@ public class OverlayDemo extends Activity {
         // MapView的生命周期与Activity同步，当activity销毁时需调用MapView.destroy()
         mMapView.onDestroy();
         super.onDestroy();
+        
         // 回收 bitmap 资源
         bdA.recycle();
         bdB.recycle();

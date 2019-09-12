@@ -2,6 +2,7 @@ package baidumapsdk.demo.search;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -56,7 +57,21 @@ public class GeoCoderDemo extends Activity implements OnGetGeoCoderResultListene
             EditText lat = (EditText) findViewById(R.id.lat);
             EditText lon = (EditText) findViewById(R.id.lon);
             CheckBox cb = (CheckBox) findViewById(R.id.newVersion);
-            LatLng ptCenter = new LatLng((Float.valueOf(lat.getText().toString())), (Float.valueOf(lon.getText().toString())));
+            Editable latEditable = lat.getText();
+            Editable lonEditable = lon.getText();
+
+            if (latEditable == null || lonEditable == null) {
+                return;
+            }
+
+            String latString = latEditable.toString();
+            String lonString = lonEditable.toString();
+
+            if (latString.isEmpty() || lonString.isEmpty()) {
+                return;
+            }
+
+            LatLng ptCenter = new LatLng((Float.valueOf(latString)), (Float.valueOf(lonString)));
 
             // 反Geo搜索
             if(cb.isChecked()){

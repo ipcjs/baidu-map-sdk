@@ -51,6 +51,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
+    // implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3' // 这个版本没有setLoggingEnabled方法, 使用github上的最新版替代
+    implementation 'com.github.dlazaro66:QRCodeReaderView:7793067609'
+    implementation "com.android.support:design:${rootProject.supportVersion}"
     implementation project(':map')
     implementation project(':location-indoor')
     implementation project(':utils')
