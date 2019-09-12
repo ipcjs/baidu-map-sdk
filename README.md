@@ -54,7 +54,7 @@
 | v1.1.2   | --        | --          | --      | --      | --      | --      | --        | 增加utils模块                     |
 | v1.2.0   | g01_1.2.5 | --          | v7.3.0  | v4.5.2  | --      | --      | --        | 升级地图和定位                    |
 | v2.0.0   | g01_2.0.1 | --          | v7.6.0  | v5.2.1  | --      | v2.6.2  | v1.0.0    | 除navi外全面升级                  |
-| v2.1.0   | g01_2.1.0 | --          | v7.9.0  | v5.4.4  | --      | v2.8.5  | --        | 紧急升级g01相关的模块, 文档未升级 |
+| v2.1.0   | g01_2.1.1 | --          | v7.9.0  | v5.4.4  | --      | v2.8.5  | --        | 紧急升级g01相关的模块, 文档未升级 |
 
 
 ### 引入
@@ -62,7 +62,7 @@
 ```groovy
 dependencies {
     // 引入已有的组合module g01, 包含的模块详见: https://github.com/ipcjs/baidu-map-sdk/tree/g01
-    compile 'com.github.ipcjs:baidu-map-sdk:g01_2.1.0'
+    compile 'com.github.ipcjs:baidu-map-sdk:g01_2.1.1'
 
     // 引入另一个组合module g02, 包含的模块详见: https://github.com/ipcjs/baidu-map-sdk/tree/g02
     compile 'com.github.ipcjs:baidu-map-sdk:g02_1.1.1'
