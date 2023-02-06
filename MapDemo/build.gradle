@@ -85,8 +85,9 @@ dependencies {
 //    implementation project(':BaiduMapSDK_Util')
 //    implementation project(':NativeEngine')
 
-    // TODO: 将so拆分到子module中
-    // implementation project(':map')
-    // implementation project(':location-indoor')
+    // TODO: MapDemo用的是7.5.4的地图, map是7.5.5的so, 不匹配, 故当前MapDemo中依然包含了7.5.4的so, 需要等MapDemo升级后移除
+    implementation project(':map')
+    implementation project(':location-indoor')
+    // TODO: 这个utils包含什么东西?
     // implementation project(':utils')
 }
