@@ -21,6 +21,9 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.navi.BaiduMapAppNotSupportNaviException;
 import com.baidu.mapapi.navi.BaiduMapNavigation;
 import com.baidu.mapapi.navi.NaviParaOption;
+import com.baidu.mapapi.navi.TruckNaviOption;
+import com.baidu.mapapi.navi.WayPoint;
+import com.baidu.mapapi.navi.WayPointInfo;
 import com.baidu.mapapi.utils.OpenClientUtil;
 import com.baidu.mapapi.utils.poi.BaiduMapPoiSearch;
 import com.baidu.mapapi.utils.poi.PoiParaOption;
@@ -44,23 +47,23 @@ public class OpenBaiduMap extends Activity {
     // 百度大厦坐标
     double mLat2 = 40.056858;
     double mLon2 = 116.308194;
-    private RadioGroup.OnCheckedChangeListener radioButtonListener;
+    private RadioGroup.OnCheckedChangeListener mRadioButtonListener;
     private CoordType mCoordType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_baidumap);
-        TextView text = (TextView) findViewById(R.id.open_Info);
-        text.setTextColor(Color.YELLOW);
-        text.setText("当手机没有安装百度地图客户端或版本过低时，默认调起百度地图webApp\n" +
+        TextView openInfoTextView = (TextView) findViewById(R.id.open_Info);
+        openInfoTextView.setTextColor(Color.RED);
+        openInfoTextView.setText("当手机没有安装百度地图客户端或版本过低时，默认调起百度地图webApp\n" +
                 "支持国测局坐标和百度坐标两种坐标调起，您可以通过SDKInitializer.setCoordType()方法来设置您使用的坐标类型");
         ListView mListView = (ListView) findViewById(R.id.listView_openBaiduMap);
         mListView.setAdapter(new OpenBaiduMapListAdapter(getData()));
         mCoordType = SDKInitializer.getCoordType();//获取全局设置的坐标类型
         SDKInitializer.setCoordType(CoordType.BD09LL);
         RadioGroup group = (RadioGroup) findViewById(R.id.RadioGroup);
-        radioButtonListener = new RadioGroup.OnCheckedChangeListener() {
+        mRadioButtonListener = new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.bd) {
@@ -71,12 +74,11 @@ public class OpenBaiduMap extends Activity {
                 }
             }
         };
-        group.setOnCheckedChangeListener(radioButtonListener);
+        group.setOnCheckedChangeListener(mRadioButtonListener);
         mListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Auto-generated method stub
                 switch (position) {
                     case 0:
@@ -119,12 +121,18 @@ public class OpenBaiduMap extends Activity {
                     case 10:
                         startWalkingNaviAR();
                         break;
+                    case 11:
+                        startRoutePlanTruck();
+                        break;
+                    case 12:
+                        startRoutePlanNewEnergy();
+                        break;
+
                     default:
                         break;
                 }
             }
         });
-
     }
 
     private List<String> getData() {
@@ -140,6 +148,9 @@ public class OpenBaiduMap extends Activity {
         data.add("启动百度地图骑行导航");
         data.add("启动百度地图全景");
         data.add("启动百度地图步行AR导航");
+        data.add("启动百度地图货车路线规划");
+        data.add("启动百度地图新能源路线规划");
+
         return data;
     }
 
@@ -150,10 +161,16 @@ public class OpenBaiduMap extends Activity {
         LatLng pt1 = new LatLng(mLat1, mLon1);
         LatLng pt2 = new LatLng(mLat2, mLon2);
 
+        WayPointInfo wayPointInfo = new WayPointInfo();
+        wayPointInfo.setLatLng(new LatLng(39.985071,116.393345));
+        ArrayList<WayPointInfo> wayPointInfos = new ArrayList<>();
+        wayPointInfos.add(wayPointInfo);
+        WayPoint wayPoint = new WayPoint(wayPointInfos);
         // 构建 导航参数
         NaviParaOption para = new NaviParaOption()
-                .startPoint(pt1).endPoint(pt2)
-                .startName("天安门").endName("百度大厦");
+                .startPoint(pt2).endPoint(pt1)
+                .setNaviRoutePolicy(NaviParaOption.NaviRoutePolicy.BLK)
+                .setWayPoint(wayPoint);
 
         try {
             BaiduMapNavigation.openBaiduMapNavi(para, this);
@@ -161,7 +178,6 @@ public class OpenBaiduMap extends Activity {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
@@ -195,7 +211,6 @@ public class OpenBaiduMap extends Activity {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
@@ -209,14 +224,12 @@ public class OpenBaiduMap extends Activity {
         NaviParaOption para = new NaviParaOption()
                 .startPoint(pt1).endPoint(pt2)
                 .startName("天安门").endName("百度大厦");
-
         try {
             BaiduMapNavigation.openBaiduMapWalkNaviAR(para, this);
         } catch (BaiduMapAppNotSupportNaviException e) {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
@@ -237,7 +250,6 @@ public class OpenBaiduMap extends Activity {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
@@ -245,33 +257,31 @@ public class OpenBaiduMap extends Activity {
      */
     public void startPoiNearbySearch() {
         LatLng ptCenter = new LatLng(mLat1, mLon1); // 天安门
-        PoiParaOption para = new PoiParaOption()
+        PoiParaOption poiParaOption = new PoiParaOption()
                 .key("西单")
                 .center(ptCenter)
                 .radius(2000);
 
         try {
-            BaiduMapPoiSearch.openBaiduMapPoiNearbySearch(para, this);
+            BaiduMapPoiSearch.openBaiduMapPoiNearbySearch(poiParaOption, this);
         } catch (Exception e) {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
      * 启动百度地图Poi详情页面
      */
     public void startPoiDetails() {
-        PoiParaOption para = new PoiParaOption().uid("65e1ee886c885190f60e77ff"); // 天安门
+        PoiParaOption poiParaOption = new PoiParaOption().uid("65e1ee886c885190f60e77ff"); // 天安门
 
         try {
-            BaiduMapPoiSearch.openBaiduMapPoiDetialsPage(para, this);
+            BaiduMapPoiSearch.openBaiduMapPoiDetialsPage(poiParaOption, this);
         } catch (Exception e) {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
@@ -284,7 +294,6 @@ public class OpenBaiduMap extends Activity {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
@@ -292,29 +301,18 @@ public class OpenBaiduMap extends Activity {
      */
     public void startRoutePlanWalking() {
         LatLng ptStart = new LatLng(34.264642646862, 108.95108518068);
-        LatLng ptEnd = new LatLng(mLat2, mLon2);
 
         // 构建 route搜索参数
-        RouteParaOption para = new RouteParaOption()
+        RouteParaOption routeParaOption = new RouteParaOption()
                 .startPoint(ptStart)
-//          .startName("天安门")
-//          .endPoint(ptEnd);
                 .endName("大雁塔")
                 .cityName("西安");
-
-//      RouteParaOption para = new RouteParaOption()
-//      .startName("天安门").endName("百度大厦");
-
-//      RouteParaOption para = new RouteParaOption()
-//      .startPoint(pt_start).endPoint(pt_end);
-
         try {
-            BaiduMapRoutePlan.openBaiduMapWalkingRoute(para, this);
+            BaiduMapRoutePlan.openBaiduMapWalkingRoute(routeParaOption, this);
         } catch (Exception e) {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
@@ -322,59 +320,78 @@ public class OpenBaiduMap extends Activity {
      */
     public void startRoutePlanDriving() {
         LatLng ptStart = new LatLng(34.264642646862, 108.95108518068);
-        LatLng ptEnd = new LatLng(mLat2, mLon2);
 
         // 构建 route搜索参数
-        RouteParaOption para = new RouteParaOption()
+        RouteParaOption routeParaOption = new RouteParaOption()
                 .startPoint(ptStart)
-//            .startName("天安门")
-//            .endPoint(ptEnd);
                 .endName("大雁塔")
                 .cityName("西安");
 
-//        RouteParaOption para = new RouteParaOption()
-//                .startName("天安门").endName("百度大厦");
-
-//        RouteParaOption para = new RouteParaOption()
-//        .startPoint(pt_start).endPoint(pt_end);
-
         try {
-            BaiduMapRoutePlan.openBaiduMapDrivingRoute(para, this);
+            BaiduMapRoutePlan.openBaiduMapDrivingRoute(routeParaOption, this);
         } catch (Exception e) {
             e.printStackTrace();
             showDialog();
         }
-
     }
 
     /**
      * 启动百度地图公交路线规划
      */
     public void startRoutePlanTransit() {
-        LatLng ptStart = new LatLng(mLat1, mLon1);
-        LatLng ptEnd = new LatLng(mLat2, mLon2);
+        LatLng ptStart = new LatLng(mLat2, mLon2);
 
         // 构建 route搜索参数
-        RouteParaOption para = new RouteParaOption()
-//            .startPoint(pt_start)
+        RouteParaOption routeParaOption = new RouteParaOption()
                 .startName("天安门")
                 .endPoint(ptStart)
-//            .endName("百度大厦")
                 .busStrategyType(EBusStrategyType.bus_recommend_way);
 
-//        RouteParaOption para = new RouteParaOption()
-//                .startName("天安门").endName("百度大厦").busStrategyType(EBusStrategyType.bus_recommend_way);
-
-//        RouteParaOption para = new RouteParaOption()
-//        .startPoint(ptStart).endPoint(ptEnd).busStrategyType(EBusStrategyType.bus_recommend_way);
-
         try {
-            BaiduMapRoutePlan.openBaiduMapTransitRoute(para, this);
+            BaiduMapRoutePlan.openBaiduMapTransitRoute(routeParaOption, this);
         } catch (Exception e) {
             e.printStackTrace();
             showDialog();
         }
+    }
 
+    /**
+     * 启动百度地图货车路线规划
+     */
+    public void startRoutePlanTruck() {
+        LatLng ptStart = new LatLng(mLat2, mLon2);
+
+        // 构建 route搜索参数
+        RouteParaOption routeParaOption = new RouteParaOption()
+                .startName("天安门")
+                .endPoint(ptStart);
+
+
+        try {
+            BaiduMapRoutePlan.openBaiduMapTruckRoute(routeParaOption, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showDialog();
+        }
+    }
+
+    /**
+     * 启动百度地图新能源路线规划
+     */
+    public void startRoutePlanNewEnergy() {
+        LatLng ptStart = new LatLng(mLat2, mLon2);
+
+        // 构建 route搜索参数
+        RouteParaOption routeParaOption = new RouteParaOption()
+                .startName("天安门")
+                .endPoint(ptStart);
+
+        try {
+            BaiduMapRoutePlan.openBaiduMapNewEnergyRoute(routeParaOption, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showDialog();
+        }
     }
 
     @Override
@@ -383,7 +400,8 @@ public class OpenBaiduMap extends Activity {
         BaiduMapNavigation.finish(this);
         BaiduMapRoutePlan.finish(this);
         BaiduMapPoiSearch.finish(this);
-        SDKInitializer.setCoordType(mCoordType);//设置为之前的坐标类型，保证此activity不对其他有影响。
+        // 设置为之前的坐标类型，保证此activity不对其他有影响。
+        SDKInitializer.setCoordType(mCoordType);
     }
 
     /**
@@ -409,22 +427,24 @@ public class OpenBaiduMap extends Activity {
         });
 
         builder.create().show();
-
     }
 
 
     private class OpenBaiduMapListAdapter extends BaseAdapter {
         List<String> list;
 
-        public OpenBaiduMapListAdapter(List<String> list) {
+        private OpenBaiduMapListAdapter(List<String> list) {
             super();
             this.list = list;
         }
 
         @Override
         public View getView(int index, View convertView, ViewGroup parent) {
-            convertView = View.inflate(OpenBaiduMap.this,
-                    R.layout.demo_info_item, null);
+            if (null == convertView){
+                convertView = View.inflate(OpenBaiduMap.this,
+                        R.layout.open_map_info_item, null);
+            }
+
             TextView title = (TextView) convertView.findViewById(R.id.title);
             TextView desc = (TextView) convertView.findViewById(R.id.desc);
             desc.setVisibility(View.INVISIBLE);

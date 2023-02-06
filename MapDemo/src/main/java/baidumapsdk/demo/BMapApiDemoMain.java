@@ -3,8 +3,6 @@
  */
 package baidumapsdk.demo;
 
-import java.util.ArrayList;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -15,71 +13,50 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.VersionInfo;
 
-import baidumapsdk.demo.map.LocationDemo;
-import baidumapsdk.demo.map.LayersDemo;
-import baidumapsdk.demo.map.HeatMapDemo;
-import baidumapsdk.demo.map.BaseMapDemo;
-import baidumapsdk.demo.map.FavoriteDemo;
-import baidumapsdk.demo.map.IndoorMapDemo;
-import baidumapsdk.demo.map.GeometryDemo;
-import baidumapsdk.demo.map.MapControlDemo;
-import baidumapsdk.demo.map.MapFragmentDemo;
-import baidumapsdk.demo.map.MarkerAnimationDemo;
-import baidumapsdk.demo.map.MarkerClusterDemo;
-import baidumapsdk.demo.map.MultiMapViewDemo;
-import baidumapsdk.demo.map.OfflineDemo;
-import baidumapsdk.demo.map.OpenglDemo;
-import baidumapsdk.demo.map.OverlayDemo;
-import baidumapsdk.demo.map.TextureMapViewDemo;
-import baidumapsdk.demo.map.TileOverlayDemo;
-import baidumapsdk.demo.map.TrackShowDemo;
-import baidumapsdk.demo.map.UISettingDemo;
-import baidumapsdk.demo.search.RoutePlanDemo;
-import baidumapsdk.demo.search.BusLineSearchDemo;
-import baidumapsdk.demo.search.DistrictSearchDemo;
-import baidumapsdk.demo.search.GeoCoderDemo;
-import baidumapsdk.demo.search.PoiSearchDemo;
-import baidumapsdk.demo.search.ShareDemo;
-import baidumapsdk.demo.search.IndoorSearchDemo;
-import baidumapsdk.demo.cloud.CloudSearchDemo;
-import baidumapsdk.demo.util.CustomMapPreview;
-import baidumapsdk.demo.util.OpenBaiduMap;
+import java.util.ArrayList;
+
+import baidumapsdk.demo.createmap.CreateMapList;
+import baidumapsdk.demo.geometry.GeometryList;
+import baidumapsdk.demo.layers.LayersList;
+import baidumapsdk.demo.mapcontrol.MapControlList;
+import baidumapsdk.demo.search.SearchList;
+import baidumapsdk.demo.searchroute.SearchRouteList;
+import baidumapsdk.demo.util.UtilsList;
 
 
-public class BMapApiDemoMain extends Activity {
+public class BMapApiDemoMain extends AppCompatActivity {
     private static final String LTAG = BMapApiDemoMain.class.getSimpleName();
 
     /**
      * 构造广播监听类，监听 SDK key 验证以及网络异常广播
      */
     public class SDKReceiver extends BroadcastReceiver {
-        @Override
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (TextUtils.isEmpty(action)) {
                 return;
             }
-
             TextView text = (TextView) findViewById(R.id.text_Info);
             text.setTextColor(Color.RED);
             if (action.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
-                // 开放鉴权错误信息描述
-                text.setText("key 验证出错! 错误码 :"
-                        + intent.getIntExtra(SDKInitializer.SDK_BROADTCAST_INTENT_EXTRA_INFO_KEY_ERROR_CODE, 0)
-                        + " ; 错误信息 ："
-                        + intent.getStringExtra(SDKInitializer.SDK_BROADTCAST_INTENT_EXTRA_INFO_KEY_ERROR_MESSAGE));
+                text.setText("key 验证出错! 错误码 :" + intent.getIntExtra
+                        (SDKInitializer.SDK_BROADTCAST_INTENT_EXTRA_INFO_KEY_ERROR_CODE, 0)
+                        +  " ; 请在 AndroidManifest.xml 文件中检查 key 设置");
             } else if (action.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_OK)) {
                 text.setText("key 验证成功! 功能可以正常使用");
                 text.setTextColor(Color.GREEN);
@@ -96,12 +73,10 @@ public class BMapApiDemoMain extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
         TextView text = (TextView) findViewById(R.id.text_Info);
         text.setTextColor(Color.GREEN);
         text.setText("欢迎使用百度地图Android SDK v" + VersionInfo.getApiVersion());
         setTitle(getTitle() + " v" + VersionInfo.getApiVersion());
-
         ListView mListView = (ListView) findViewById(R.id.listView);
         // 添加ListItem，设置事件响应
         mListView.setAdapter(new DemoListAdapter());
@@ -111,6 +86,7 @@ public class BMapApiDemoMain extends Activity {
             }
         });
 
+        // 申请动态权限
         requestPermission();
 
         // 注册 SDK 广播监听者
@@ -129,35 +105,13 @@ public class BMapApiDemoMain extends Activity {
     }
 
     private static final DemoInfo[] DEMOS = {
-            new DemoInfo(R.string.demo_title_basemap, R.string.demo_desc_basemap, BaseMapDemo.class),
-            new DemoInfo(R.string.demo_title_map_fragment, R.string.demo_desc_map_fragment, MapFragmentDemo.class),
-            new DemoInfo(R.string.demo_title_layers, R.string.demo_desc_layers, LayersDemo.class),
-            new DemoInfo(R.string.demo_title_multimap, R.string.demo_desc_multimap, MultiMapViewDemo.class),
-            new DemoInfo(R.string.demo_title_control, R.string.demo_desc_control, MapControlDemo.class),
-            new DemoInfo(R.string.demo_title_ui, R.string.demo_desc_ui, UISettingDemo.class),
-            new DemoInfo(R.string.demo_title_location, R.string.demo_desc_location, LocationDemo.class),
-            new DemoInfo(R.string.demo_title_geometry, R.string.demo_desc_geometry, GeometryDemo.class),
-            new DemoInfo(R.string.demo_title_overlay, R.string.demo_desc_overlay, OverlayDemo.class),
-            new DemoInfo(R.string.demo_title_marker_animation, R.string.demo_desc_marker_animation, MarkerAnimationDemo.class),
-            new DemoInfo(R.string.demo_title_heatmap, R.string.demo_desc_heatmap, HeatMapDemo.class),
-            new DemoInfo(R.string.demo_title_geocode, R.string.demo_desc_geocode, GeoCoderDemo.class),
-            new DemoInfo(R.string.demo_title_poi, R.string.demo_desc_poi, PoiSearchDemo.class),
-            new DemoInfo(R.string.demo_title_route, R.string.demo_desc_route, RoutePlanDemo.class),
-            new DemoInfo(R.string.demo_title_districsearch, R.string.demo_desc_districsearch, DistrictSearchDemo.class),
-            new DemoInfo(R.string.demo_title_bus, R.string.demo_desc_bus, BusLineSearchDemo.class),
-            new DemoInfo(R.string.demo_title_share, R.string.demo_desc_share, ShareDemo.class),
-            new DemoInfo(R.string.demo_title_offline, R.string.demo_desc_offline, OfflineDemo.class),
-            new DemoInfo(R.string.demo_title_open_baidumap, R.string.demo_desc_open_baidumap, OpenBaiduMap.class),
-            new DemoInfo(R.string.demo_title_favorite, R.string.demo_desc_favorite, FavoriteDemo.class),
-            new DemoInfo(R.string.demo_title_cloud, R.string.demo_desc_cloud, CloudSearchDemo.class),
-            new DemoInfo(R.string.demo_title_opengl, R.string.demo_desc_opengl, OpenglDemo.class),
-            new DemoInfo(R.string.demo_title_cluster, R.string.demo_desc_cluster, MarkerClusterDemo.class),
-            new DemoInfo(R.string.demo_title_tileoverlay, R.string.demo_desc_tileoverlay, TileOverlayDemo.class),
-            new DemoInfo(R.string.demo_desc_texturemapview, R.string.demo_desc_texturemapview, TextureMapViewDemo.class),
-            new DemoInfo(R.string.demo_title_indoor, R.string.demo_desc_indoor, IndoorMapDemo.class),
-            new DemoInfo(R.string.demo_title_indoorsearch, R.string.demo_desc_indoorsearch, IndoorSearchDemo.class),
-            new DemoInfo(R.string.demo_track_show, R.string.demo_desc_track_show, TrackShowDemo.class),
-            new DemoInfo(R.string.demo_title_custom_map_preview, R.string.demo_desc_custom_map_preview, CustomMapPreview.class)
+            new DemoInfo(R.drawable.map, R.string.demo_title_createmaplist, R.string.demo_desc_createmaplist, CreateMapList.class),
+            new DemoInfo(R.drawable.layers, R.string.demo_title_layerlist, R.string.demo_desc_layerlist, LayersList.class),
+            new DemoInfo(R.drawable.control, R.string.demo_title_mapcontrollist, R.string.demo_desc_mapcontrollist, MapControlList.class),
+            new DemoInfo(R.drawable.draw, R.string.demo_title_drawlist, R.string.demo_desc_drawlist, GeometryList.class),
+            new DemoInfo(R.drawable.search, R.string.demo_title_searchlist, R.string.demo_desc_searchlist, SearchList.class),
+            new DemoInfo(R.drawable.route, R.string.demo_title_routeplan, R.string.demo_desc_routeplan, SearchRouteList.class),
+            new DemoInfo(R.drawable.util, R.string.demo_title_util, R.string.demo_desc_util, UtilsList.class)
     };
 
     @Override
@@ -177,19 +131,16 @@ public class BMapApiDemoMain extends Activity {
      */
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionRequested) {
-
             isPermissionRequested = true;
-
             ArrayList<String> permissionsList = new ArrayList<>();
-
             String[] permissions = {
                     Manifest.permission.ACCESS_NETWORK_STATE,
                     Manifest.permission.INTERNET,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_WIFI_STATE,
             };
 
             for (String perm : permissions) {
@@ -200,24 +151,28 @@ public class BMapApiDemoMain extends Activity {
             }
 
             if (!permissionsList.isEmpty()) {
-                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), 0);
+                String[] strings = new String[permissionsList.size()];
+                requestPermissions(permissionsList.toArray(strings), 0);
             }
         }
     }
 
     private class DemoListAdapter extends BaseAdapter {
-        DemoListAdapter() {
+        private DemoListAdapter() {
             super();
         }
 
         @Override
         public View getView(int index, View convertView, ViewGroup parent) {
-            convertView = View.inflate(BMapApiDemoMain.this, R.layout.demo_info_item, null);
+            if (null == convertView) {
+                convertView = View.inflate(BMapApiDemoMain.this, R.layout.demo_item, null);
+            }
+            ImageView imageView =(ImageView)convertView.findViewById(R.id.image);
             TextView title = (TextView) convertView.findViewById(R.id.title);
             TextView desc = (TextView) convertView.findViewById(R.id.desc);
+            imageView.setBackgroundResource(DEMOS[index].image);
             title.setText(DEMOS[index].title);
             desc.setText(DEMOS[index].desc);
-
             return convertView;
         }
 
@@ -238,11 +193,13 @@ public class BMapApiDemoMain extends Activity {
     }
 
     private static class DemoInfo {
+        private final int image;
         private final int title;
         private final int desc;
         private final Class<? extends Activity> demoClass;
 
-        DemoInfo(int title, int desc, Class<? extends Activity> demoClass) {
+        private DemoInfo(int image,int title, int desc, Class<? extends Activity> demoClass) {
+            this.image = image;
             this.title = title;
             this.desc = desc;
             this.demoClass = demoClass;

@@ -17,10 +17,6 @@ import android.widget.TextView;
  */
 public class StripItem extends FrameLayout {
 
-    public TextView getmText() {
-        return mText;
-    }
-
     private TextView mText;
     private static final int ITEM_HEIGHT = 45;
     private static final int ITEM_PADDING = 20;
@@ -42,6 +38,10 @@ public class StripItem extends FrameLayout {
         init();
     }
 
+    public TextView getText() {
+        return mText;
+    }
+
     /**
      * 初始化
      */
@@ -54,7 +54,6 @@ public class StripItem extends FrameLayout {
         addView(layout, layoutParams);
 
         mText = new TextView(getContext());
-        mText.setEllipsize(TextUtils.TruncateAt.END);
         mText.setSingleLine();
         mText.setIncludeFontPadding(false);
         mText.setGravity(Gravity.CENTER);
@@ -78,6 +77,4 @@ public class StripItem extends FrameLayout {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
-
-
 }

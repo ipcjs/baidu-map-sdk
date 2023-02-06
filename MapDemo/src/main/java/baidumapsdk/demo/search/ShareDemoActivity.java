@@ -9,6 +9,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 import baidumapsdk.demo.R;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -44,8 +45,7 @@ import static com.baidu.mapapi.search.share.RouteShareURLOption.RouteShareMode;
 /**
  * 演示短串分享功能，
  */
-public class ShareDemoActivity extends Activity implements
-        OnGetPoiSearchResultListener, OnGetShareUrlResultListener,
+public class ShareDemoActivity extends Activity implements OnGetPoiSearchResultListener, OnGetShareUrlResultListener,
         OnGetGeoCoderResultListener, BaiduMap.OnMarkerClickListener {
 
     private MapView mMapView = null;
@@ -85,47 +85,40 @@ public class ShareDemoActivity extends Activity implements
 
     @Override
     protected void onPause() {
-        mMapView.onPause();
         super.onPause();
+        mMapView.onPause();
     }
 
     @Override
     protected void onResume() {
-        mMapView.onResume();
         super.onResume();
+        mMapView.onResume();
     }
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         mMapView.onDestroy();
         mPoiSearch.destroy();
         mShareUrlSearch.destroy();
-        super.onDestroy();
     }
 
     public void sharePoi(View view) {
         // 发起poi搜索
-        mPoiSearch.searchInCity((new PoiCitySearchOption()).city(mCity)
-                .keyword(searchKey));
-        Toast.makeText(this, "在" + mCity + "搜索 " + searchKey,
-                Toast.LENGTH_SHORT).show();
+        mPoiSearch.searchInCity((new PoiCitySearchOption()).city(mCity).keyword(searchKey));
+        Toast.makeText(this, "在" + mCity + "搜索 " + searchKey, Toast.LENGTH_SHORT).show();
     }
 
     public void shareAddr(View view) {
         // 发起反地理编码请求
         mGeoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(mPoint));
-        Toast.makeText(
-                this,
-                String.format("搜索位置： %f，%f", mPoint.latitude, mPoint.longitude),
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, String.format("搜索位置： %f，%f", mPoint.latitude, mPoint.longitude), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onGetPoiResult(PoiResult result) {
-
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(ShareDemoActivity.this, "抱歉，未找到结果",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(ShareDemoActivity.this, "抱歉，未找到结果", Toast.LENGTH_LONG).show();
             return;
         }
         mBaiduMap.clear();
@@ -157,38 +150,30 @@ public class ShareDemoActivity extends Activity implements
 
     @Override
     public void onGetPoiDetailShareUrlResult(ShareUrlResult result) {
-
         // 分享短串结果
         Intent it = new Intent(Intent.ACTION_SEND);
-        it.putExtra(Intent.EXTRA_TEXT, "您的朋友通过百度地图SDK与您分享一个POI点详情: " + currentAddr
-                + " -- " + result.getUrl());
+        it.putExtra(Intent.EXTRA_TEXT, "您的朋友通过百度地图SDK与您分享一个POI点详情: " + currentAddr + " -- " + result.getUrl());
         it.setType("text/plain");
         startActivity(Intent.createChooser(it, "将短串分享到"));
-
     }
 
     @Override
     public void onGetLocationShareUrlResult(ShareUrlResult result) {
-
         // 分享短串结果
         Intent it = new Intent(Intent.ACTION_SEND);
-        it.putExtra(Intent.EXTRA_TEXT, "您的朋友通过百度地图SDK与您分享一个位置: " + currentAddr
-                + " -- " + result.getUrl());
+        it.putExtra(Intent.EXTRA_TEXT, "您的朋友通过百度地图SDK与您分享一个位置: " + currentAddr + " -- " + result.getUrl());
         it.setType("text/plain");
         startActivity(Intent.createChooser(it, "将短串分享到"));
-
     }
 
     @Override
     public void onGetRouteShareUrlResult(ShareUrlResult shareUrlResult) {
         Intent it = new Intent(Intent.ACTION_SEND);
-        it.putExtra(Intent.EXTRA_TEXT, "您的朋友通过百度地图SDK与您分享一条路线，URL "
-                + " -- " + shareUrlResult.getUrl());
+        it.putExtra(Intent.EXTRA_TEXT, "您的朋友通过百度地图SDK与您分享一条路线，URL " + " -- " + shareUrlResult.getUrl());
         it.setType("text/plain");
         Intent intent = Intent.createChooser(it, "将短串分享到");
         if (null == intent) {
-            Toast.makeText(ShareDemoActivity.this, "抱歉，分享目标选择失败",
-                Toast.LENGTH_LONG).show();
+            Toast.makeText(ShareDemoActivity.this, "抱歉，分享目标选择失败", Toast.LENGTH_LONG).show();
         }
         startActivity(intent);
     }
@@ -201,28 +186,25 @@ public class ShareDemoActivity extends Activity implements
     @Override
     public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
         if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-            Toast.makeText(ShareDemoActivity.this, "抱歉，未找到结果",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(ShareDemoActivity.this, "抱歉，未找到结果", Toast.LENGTH_LONG).show();
             return;
         }
         mBaiduMap.clear();
         mBaiduMap.setOnMarkerClickListener(this);
-        mAddrMarker = (Marker) mBaiduMap.addOverlay(new MarkerOptions()
-                .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.icon_marka))
-                .title(result.getAddress()).position(result.getLocation()));
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
+        mAddrMarker = (Marker) mBaiduMap.addOverlay(new MarkerOptions().icon(bitmapDescriptor).title(result.getAddress())
+                .position(result.getLocation()));
         MapStatus.Builder builder = new MapStatus.Builder();
         builder.target(mAddrMarker.getPosition());
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+        bitmapDescriptor.recycle();
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         if (marker == mAddrMarker) {
-            mShareUrlSearch
-                    .requestLocationShareUrl(new LocationShareURLOption()
-                            .location(marker.getPosition()).snippet("测试分享点")
-                            .name(marker.getTitle()));
+            mShareUrlSearch.requestLocationShareUrl(new LocationShareURLOption().location(marker.getPosition())
+                    .snippet("测试分享点").name(marker.getTitle()));
         }
         return true;
     }
@@ -258,10 +240,8 @@ public class ShareDemoActivity extends Activity implements
     public void shareRoute(View view) {
         startNode = PlanNode.withLocation(new LatLng(40.056885, 116.308142));
         enPlanNode = PlanNode.withLocation(new LatLng(39.921933, 116.488962));
-        mShareUrlSearch.requestRouteShareUrl(new RouteShareURLOption()
-                .from(startNode).to(enPlanNode).routMode(mRouteShareMode));
+        mShareUrlSearch.requestRouteShareUrl(new RouteShareURLOption().from(startNode).to(enPlanNode).routMode(mRouteShareMode));
     }
-
 
     /**
      * 使用PoiOverlay 展示poi点，在poi被点击时发起短串请求.
@@ -276,9 +256,7 @@ public class ShareDemoActivity extends Activity implements
         public boolean onPoiClick(int i) {
             PoiInfo info = getPoiResult().getAllPoi().get(i);
             currentAddr = info.address;
-            mShareUrlSearch
-                    .requestPoiDetailShareUrl(new PoiDetailShareURLOption()
-                            .poiUid(info.uid));
+            mShareUrlSearch.requestPoiDetailShareUrl(new PoiDetailShareURLOption().poiUid(info.uid));
             return true;
         }
     }

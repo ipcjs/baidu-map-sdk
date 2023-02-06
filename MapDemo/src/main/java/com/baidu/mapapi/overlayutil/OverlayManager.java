@@ -2,6 +2,7 @@ package com.baidu.mapapi.overlayutil;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnPolylineClickListener;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.Overlay;
@@ -35,7 +36,7 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
 
     /**
      * 通过一个BaiduMap 对象构造
-     * 
+     *
      * @param baiduMap
      */
     public OverlayManager(BaiduMap baiduMap) {
@@ -51,7 +52,7 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
 
     /**
      * 覆写此方法设置要管理的Overlay列表
-     * 
+     *
      * @return 管理的Overlay列表
      */
     public abstract List<OverlayOptions> getOverlayOptions();
@@ -67,7 +68,7 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
         removeFromMap();
         List<OverlayOptions> overlayOptions = getOverlayOptions();
         if (overlayOptions != null) {
-            mOverlayOptionList.addAll(getOverlayOptions());
+            mOverlayOptionList.addAll(overlayOptions);
         }
 
         for (OverlayOptions option : mOverlayOptionList) {
@@ -95,7 +96,6 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
      * <p>
      * 注： 该方法只对Marker类型的overlay有效
      * </p>
-     * 
      */
     public void zoomToSpan() {
         if (mBaiduMap == null) {
@@ -109,8 +109,35 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
                     builder.include(((Marker) overlay).getPosition());
                 }
             }
+            MapStatus mapStatus = mBaiduMap.getMapStatus();
+            if (null != mapStatus){
+                int width = mapStatus.winRound.right - mBaiduMap.getMapStatus().winRound.left - 400;
+                int height = mapStatus.winRound.bottom - mBaiduMap.getMapStatus().winRound.top - 400;
+                mBaiduMap.setMapStatus(MapStatusUpdateFactory
+                        .newLatLngBounds(builder.build(), width, height));
+            }
+
+        }
+    }
+
+    /**
+     * 设置显示在规定宽高中的地图地理范围
+     */
+    public void zoomToSpanPaddingBounds(int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
+        if (mBaiduMap == null) {
+            return;
+        }
+        if (mOverlayList.size() > 0) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (Overlay overlay : mOverlayList) {
+                // polyline 中的点可能太多，只按marker 缩放
+                if (overlay instanceof Marker) {
+                    builder.include(((Marker) overlay).getPosition());
+                }
+            }
+
             mBaiduMap.setMapStatus(MapStatusUpdateFactory
-                    .newLatLngBounds(builder.build()));
+                    .newLatLngBounds(builder.build(), paddingLeft, paddingTop, paddingRight, paddingBottom));
         }
     }
 

@@ -18,7 +18,5 @@ public class ShareDemo extends Activity {
         Intent intent = new Intent();
         intent.setClass(this, ShareDemoActivity.class);
         startActivity(intent);
-
     }
-
 }

@@ -17,6 +17,24 @@ android {
         debug {
             storeFile file("debug.keystore")
         }
+
+        release {
+            keyAlias "baidumapsdk"
+            keyPassword "baidumapsdk"
+            storeFile file('release.keystore')
+            storePassword "baidumapsdk"
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            signingConfig signingConfigs.debug
+        }
+        release {
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            signingConfig signingConfigs.release
+        }
     }
 
     sourceSets {
@@ -25,7 +43,7 @@ android {
         }
 
         // Move the tests to tests/java, tests/res, etc...
-        // instrumentTest.setRoot('tests')
+        androidTest.setRoot('tests')
 
         // Move the build types to build-types/<type>
         // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
@@ -38,7 +56,7 @@ android {
     }
     defaultConfig {
         applicationId "baidumapsdk.demo"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -49,12 +67,26 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
-    // implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3' // 这个版本没有setLoggingEnabled方法, 使用github上的最新版替代
-    implementation 'com.github.dlazaro66:QRCodeReaderView:7793067609'
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    implementation 'com.google.zxing:core:3.3.3'
+//    implementation(name: 'baidumapapi_base_v7_5_4_Union', ext: 'jar')
+//    implementation(name: 'BaiduLBS_msu', ext: 'jar')
+//    implementation(name: 'baidumapapi_map_v7_5_4', ext: 'jar')
+//    implementation(name: 'baidumapapi_util_v7_5_4', ext: 'jar')
+//    implementation(name: 'baidumapapi_search_v7_5_4', ext: 'jar')
+    implementation(name: 'BaiduLBS_Android', ext: 'jar')
+//    implementation(name: 'locSDKnoProGuard_developer_base_Release__7.10.3', ext: 'jar')
     implementation "com.android.support:design:${rootProject.supportVersion}"
-    implementation project(':map')
-    implementation project(':location-indoor')
-    implementation project(':utils')
+    implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
+//    implementation 'com.baidu.searchbox.common.security:framework:1.0.49-dev-arch00-9099-15'
+//    implementation project(':BaiduMapSDK_Base')
+//    implementation project(':BaiduMapSDK_Map')
+//    implementation project(':BaiduMapSDK_Search')
+//    implementation project(':BaiduMapSDK_Util')
+//    implementation project(':NativeEngine')
+
+    // TODO: 将so拆分到子module中
+    // implementation project(':map')
+    // implementation project(':location-indoor')
+    // implementation project(':utils')
 }

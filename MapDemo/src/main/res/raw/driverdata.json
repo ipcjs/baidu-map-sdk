@@ -1,0 +1,111 @@
+[
+  {
+  "driverName": "赵师傅",
+  "driverId": "BDZHAO2021001",
+  "companyServerId": "bdsctx_dft",
+  "locations" :[
+    {"lng":116.309956,"lat":40.058313},
+    {"lng":116.310203,"lat":40.057809},
+    {"lng":116.310583,"lat":40.057108},
+    {"lng":116.310953,"lat":40.056198},
+    {"lng":116.310616,"lat":40.056104},
+    {"lng":116.310140,"lat":40.055987},
+    {"lng":116.308689,"lat":40.055676}
+  ]
+  },
+  {
+    "driverName": "唐师傅",
+    "driverId": "BDTANG2021002",
+    "companyServerId": "bdsctx_dft",
+    "locations" :[
+      {"lng":116.308689,"lat":40.055676},
+      {"lng":116.307571,"lat":40.055431},
+      {"lng":116.306641,"lat":40.055224},
+      {"lng":116.305563,"lat":40.055201},
+      {"lng":116.305806,"lat":40.054544}
+    ]
+  },
+  {
+    "driverName": "王师傅",
+    "driverId": "BDWANG2021003",
+    "companyServerId": "bdsctx_dft",
+    "locations" :[
+      {"lng":116.304413,"lat":40.058503},
+      {"lng":116.305055,"lat":40.056236},
+      {"lng":116.302652,"lat":40.055818},
+      {"lng":116.302482,"lat":40.056439}
+    ]
+  },
+  {
+    "driverName": "赵师傅",
+    "driverId": "BDZHAO2021004",
+    "companyServerId": "bdsctx_dft",
+    "locations" :[
+      {"lng":116.310203,"lat":40.057809},
+      {"lng":116.310953,"lat":40.056198},
+      {"lng":116.310616,"lat":40.056104},
+      {"lng":116.31014,"lat":40.055987},
+      {"lng":116.308689,"lat":40.055676}
+    ]
+  },
+  {
+    "driverName": "唐师傅",
+    "driverId": "BDTANG2021005",
+    "companyServerId": "bdsctx_dft",
+    "locations" :[
+      {"lng":116.307571,"lat":40.055431},
+      {"lng":116.306641,"lat":40.055224},
+      {"lng":116.305563,"lat":40.055101},
+      {"lng":116.305806,"lat":40.054544}
+    ]
+  },
+  {
+    "driverName": "王师傅",
+    "driverId": "BDWANG2021006",
+    "companyServerId": "bdsctx_dft",
+    "locations" :[
+      {"lng":116.304413,"lat":40.058503},
+      {"lng":116.305055,"lat":40.056236},
+      {"lng":116.302652,"lat":40.055818},
+      {"lng":116.302482,"lat":40.056439}
+    ]
+  },
+  {
+    "driverName": "赵师傅",
+    "driverId": "BDZHAO2021007",
+    "companyServerId": "bdsctx_dft",
+    "locations" :[
+      {"lng":116.310993,"lat":40.059407},
+      {"lng":116.30956,"lat":40.05908},
+      {"lng":116.308689,"lat":40.058859},
+      {"lng":116.307355,"lat":40.058603},
+      {"lng":116.305823,"lat":40.058272},
+      {"lng":116.304719,"lat":40.058054},
+      {"lng":116.304489,"lat":40.059052}
+    ]
+  },
+  {
+    "driverName": "唐师傅",
+    "driverId": "BDTANG2021008",
+    "companyServerId": "bdsctx_dft",
+    "locations" :[
+      {"lng":116.304844,"lat":40.058006},
+      {"lng":116.305693,"lat":40.058158},
+      {"lng":116.306452,"lat":40.058286},
+      {"lng":116.306816,"lat":40.057426},
+      {"lng":116.306987,"lat":40.056981}
+    ]
+  },
+  {
+    "driverName": "王师傅",
+    "driverId": "BDWANG2021009",
+    "companyServerId": "bdsctx_dft",
+    "locations" :[
+      {"lng":116.306987,"lat":40.056981},
+      {"lng":116.307571,"lat":40.055438},
+      {"lng":116.305774,"lat":40.055045},
+      {"lng":116.305235,"lat":40.056367},
+      {"lng":116.304525,"lat":40.058923}
+    ]
+  }
+]

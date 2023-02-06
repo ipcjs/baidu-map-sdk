@@ -1,7 +1,7 @@
 package baidumapsdk.demo.search;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,20 +25,23 @@ import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 
+import baidumapsdk.demo.R;
 import baidumapsdk.demo.indoorview.BaseStripAdapter;
 import baidumapsdk.demo.indoorview.StripListView;
-import baidumapsdk.demo.R;
 
-public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultListener,
+/**
+ * 演示室内poi检索功能
+ */
+public class IndoorSearchDemo extends AppCompatActivity implements OnGetPoiSearchResultListener,
         BaiduMap.OnBaseIndoorMapListener {
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     private PoiSearch mPoiSearch = null;
-    Button searchBtn;
-    EditText searchContent;
-    StripListView stripView;
-    BaseStripAdapter mFloorListAdapter;
-    MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
+    private Button mSearchBtn;
+    private EditText mEditSearchContent;
+    private StripListView mStripView;
+    private BaseStripAdapter mFloorListAdapter;
+    private MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,9 +51,7 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
 
-        /* 因为室内图支持最大缩放级别为22.0f，要做特殊处理，所以要先打开室内图开关，然后做地图刷新，以防设置
-         * 缩放级别为22.0f时不生效
-         */
+        // 因为室内图支持最大缩放级别为22.0f，要做特殊处理，所以要先打开室内图开关，然后做地图刷新，以防设置缩放级别为22.0f时不生效
         mBaiduMap.setIndoorEnable(true);
 
         LatLng centerpos = new LatLng(39.871281,116.385306); // 北京南站
@@ -58,19 +59,18 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
         builder.target(centerpos).zoom(19.0f);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
-     //   stripView = (StripListView) findViewById(R.id.stripView);
-        stripView = new StripListView(this);
+        mStripView = new StripListView(this);
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.viewStub);
-        layout.addView(stripView);
+        layout.addView(mStripView);
         mFloorListAdapter = new BaseStripAdapter(this);
         mBaiduMap.setOnBaseIndoorMapListener(this);
 
         mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
 
-        searchContent = (EditText) findViewById(R.id.content);
-        searchBtn = (Button) findViewById(R.id.indoorSearch);
-        searchBtn.setOnClickListener(new View.OnClickListener() {
+        mEditSearchContent = (EditText) findViewById(R.id.content);
+        mSearchBtn = (Button) findViewById(R.id.indoorSearch);
+        mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MapBaseIndoorMapInfo indoorInfo = mBaiduMap.getFocusedBaseIndoorMapInfo();
@@ -78,16 +78,15 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
                     Toast.makeText(IndoorSearchDemo.this, "当前无室内图，无法搜索" , Toast.LENGTH_LONG).show();
                     return;
                 }
-                PoiIndoorOption option = new PoiIndoorOption().poiIndoorBid(
-                        indoorInfo.getID()).poiIndoorWd(searchContent.getText().toString());
+                PoiIndoorOption option = new PoiIndoorOption().poiIndoorBid(indoorInfo.getID())
+                        .poiIndoorWd(mEditSearchContent.getText().toString());
                 mPoiSearch.searchPoiIndoor( option);
             }
         });
 
-        stripView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mStripView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mMapBaseIndoorMapInfo == null) {
                     return;
                 }
@@ -105,10 +104,6 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
 
     }
 
-    /**
-     * V5.2.0版本之后，还方法废弃，使用{@link #onGetPoiDetailResult(PoiDetailSearchResult)}
-     * 代替
-     */
     @Override
     public void onGetPoiDetailResult(PoiDetailResult result) {
 
@@ -120,8 +115,9 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
     }
 
     /**
-     * 获取室内图搜索结果，得到searchPoiIndoor返回的结果
-     * @param result
+     * poi 室内检索结果回调
+     *
+     * @param result poi室内检索结果
      */
     @Override
     public void onGetPoiIndoorResult(PoiIndoorResult result) {
@@ -139,19 +135,24 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
         }
     }
 
+    /**
+     * 地图进入室内图模式回调函数
+     *
+     * @param isIndoorMap 是否进入室内图模式
+     * @param mapBaseIndoorMapInfo 室内图信息
+     */
     @Override
-    public void onBaseIndoorMapMode(boolean b, MapBaseIndoorMapInfo mapBaseIndoorMapInfo) {
-
-        if (b) {
-            stripView.setVisibility(View.VISIBLE);
+    public void onBaseIndoorMapMode(boolean isIndoorMap, MapBaseIndoorMapInfo mapBaseIndoorMapInfo) {
+        if (isIndoorMap) {
+            mStripView.setVisibility(View.VISIBLE);
             if (mapBaseIndoorMapInfo == null) {
                 return;
             }
-            mFloorListAdapter.setmFloorList(mapBaseIndoorMapInfo.getFloors());
-            stripView.setStripAdapter(mFloorListAdapter);
+            mFloorListAdapter.setFloorList(mapBaseIndoorMapInfo.getFloors());
+            mStripView.setStripAdapter(mFloorListAdapter);
 
         } else {
-            stripView.setVisibility(View.GONE);
+            mStripView.setVisibility(View.GONE);
         }
         mMapBaseIndoorMapInfo = mapBaseIndoorMapInfo;
     }
@@ -163,11 +164,10 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
          *
          * @param baiduMap 该 IndoorPoiOverlay 引用的 BaiduMap 对象
          */
-        public MyIndoorPoiOverlay(BaiduMap baiduMap) {
+        private MyIndoorPoiOverlay(BaiduMap baiduMap) {
             super(baiduMap);
         }
 
-        @Override
         /**
          * 响应点击室内POI点事件
          * @param i
@@ -175,12 +175,12 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
          *            {@link com.baidu.mapapi.search.poi.PoiIndoorResult#getmArrayPoiInfo()} } 中的索引
          * @return
          */
+        @Override
         public boolean onPoiClick(int i) {
             PoiIndoorInfo info =  getIndoorPoiResult().getmArrayPoiInfo().get(i);
             Toast.makeText(IndoorSearchDemo.this, info.name + ",在" + info.floor + "层", Toast.LENGTH_LONG).show();
             return false;
         }
-
     }
 
     @Override
@@ -201,5 +201,4 @@ public class IndoorSearchDemo extends Activity implements OnGetPoiSearchResultLi
         mPoiSearch.destroy();
         mMapView.onDestroy();
     }
-
 }

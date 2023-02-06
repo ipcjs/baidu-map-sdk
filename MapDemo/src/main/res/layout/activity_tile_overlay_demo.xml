@@ -2,59 +2,62 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:background="@color/dkgray"
+        android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/online_url"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/tileoverlay_online_urlhint"
-            android:id="@+id/online_url" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/ui_size" />
 
         <Button
             android:id="@+id/online"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dip"
-            android:layout_marginLeft="2dip"
-            android:layout_marginRight="2dip"
-            android:layout_marginTop="2dip"
+            android:layout_height="35dp"
+            android:layout_margin="2dp"
             android:layout_weight="0.35"
-            android:text="在线方式" />
+            android:background="@drawable/btn_selector"
+            android:text="在线方式"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ui_size" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:background="@color/dkgray"
+        android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/hide_poiinfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dip"
-            android:layout_marginLeft="2dip"
-            android:layout_marginRight="2dip"
-            android:layout_marginTop="2dip"
+            android:layout_margin="2dp"
             android:layout_weight="1"
             android:checked="false"
-            android:text="@string/hide_poiinfo" />
+            android:text="@string/hide_poiinfo"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ui_size" />
 
         <Button
             android:id="@+id/offline"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dip"
-            android:layout_marginLeft="2dip"
-            android:layout_marginRight="2dip"
-            android:layout_marginTop="2dip"
+            android:layout_height="35dp"
+            android:layout_margin="2dp"
             android:layout_weight="0.35"
-            android:text="离线方式" />
+            android:background="@drawable/btn_selector"
+            android:text="离线方式"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ui_size" />
     </LinearLayout>
 
     <com.baidu.mapapi.map.MapView

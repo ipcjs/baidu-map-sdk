@@ -1,62 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <RadioGroup
-            android:id="@+id/RadioGroup"
-            android:layout_width="wrap_content"
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/bmapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="horizontal" >
+            android:background="@color/dkgray"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingRight="10dp">
 
-            <RadioButton
-                android:id="@+id/normal"
-                android:layout_width="wrap_content"
+            <CheckBox
+                android:id="@+id/heatMap"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:checked="true"
-                android:onClick="setMapMode"
-                android:text="普通图" />
+                android:onClick="setHeatMap"
+                android:text="热力图"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
-            <RadioButton
-                android:id="@+id/statellite"
-                android:layout_width="wrap_content"
+            <CheckBox
+                android:id="@+id/traffice"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="setMapMode"
-                android:text="卫星图" />
-        </RadioGroup>
+                android:checked="false"
+                android:onClick="setTraffic"
+                android:text="路况图"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
-        <CheckBox
-            android:id="@+id/traffice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="false"
-            android:onClick="setTraffic"
-            android:text="路况图" />
-         
-         <CheckBox
-            android:id="@+id/baiduHeatMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="false"
-            android:onClick="setBaiduHeatMap"
-            android:text="百度城市热力图" />
-    </LinearLayout>
-
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/bmapView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:clickable="true" />
+        </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

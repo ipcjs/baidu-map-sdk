@@ -18,7 +18,6 @@ import java.util.List;
  * 楼层条数据适配器
  */
 public class BaseStripAdapter extends BaseAdapter {
-    private LayoutInflater mInflater;
 
     private List<String> mFloorList = new ArrayList<String>();
     private int selectedPos;
@@ -30,12 +29,10 @@ public class BaseStripAdapter extends BaseAdapter {
     }
 
     public BaseStripAdapter(Context ctx) {
-        mInflater = (LayoutInflater) ctx
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = ctx;
     }
 
-    public void setmFloorList(List<String> mFloorList) {
+    public void setFloorList(List<String> mFloorList) {
         this.mFloorList = mFloorList;
     }
 
@@ -64,7 +61,7 @@ public class BaseStripAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = new StripItem(mContext);
             holder = new NoteViewHolder();
-            holder.mFloorTextTV = ((StripItem) convertView).getmText();
+            holder.mFloorTextTV = ((StripItem) convertView).getText();
             convertView.setTag(holder);
         } else {
             holder = (NoteViewHolder) convertView.getTag();
@@ -90,6 +87,5 @@ public class BaseStripAdapter extends BaseAdapter {
         }
         view.setSelected(isSelected);
     }
-
 }
 

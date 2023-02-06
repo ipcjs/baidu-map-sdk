@@ -45,14 +45,14 @@ public class IndoorPoiOverlay extends OverlayManager {
 
     @Override
     public final List<OverlayOptions> getOverlayOptions() {
-        if (mIndoorPoiResult == null || mIndoorPoiResult.getmArrayPoiInfo() == null) {
+        if (mIndoorPoiResult == null || mIndoorPoiResult.getArrayPoiInfo() == null) {
             return null;
         }
         List<OverlayOptions> markerList = new ArrayList<OverlayOptions>();
         int markerSize = 0;
-        for (int i = 0; i < mIndoorPoiResult.getmArrayPoiInfo().size()
+        for (int i = 0; i < mIndoorPoiResult.getArrayPoiInfo().size()
                 && markerSize < MAX_POI_SIZE; i++) {
-            if (mIndoorPoiResult.getmArrayPoiInfo().get(i).latLng == null) {
+            if (mIndoorPoiResult.getArrayPoiInfo().get(i).latLng == null) {
                 continue;
             }
             markerSize++;
@@ -61,7 +61,7 @@ public class IndoorPoiOverlay extends OverlayManager {
             markerList.add(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromAssetWithDpi("Icon_mark"
                             + markerSize + ".png")).extraInfo(bundle)
-                    .position(mIndoorPoiResult.getmArrayPoiInfo().get(i).latLng));
+                    .position(mIndoorPoiResult.getArrayPoiInfo().get(i).latLng));
 
         }
         return markerList;
