@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.ipcjs.baidumapsdk.utils.R;
+import com.github.ipcjs.baidumapsdk.clusterutil.R;
 
 /**
  * IconGenerator generates icons that contain text (or custom content) within an info

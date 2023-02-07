@@ -30,7 +30,7 @@ so文件和module的对应关系详见：[copySoFilesToModules](build.gradle#L31
 
 - 定位SDK => `location`/`location-indoor`
 - 地图SDK => `base`/`map`/`bikennavi`
-    - 点聚合等功能 => `utils`
+    - 点聚合工具 => `clusterutil`
 - 导航SDK => `navi`（未维护）
 - 全景SDK => `panorama`
 - AR地图SDK => `ar`（未维护）

@@ -7,7 +7,7 @@ include ':bikenavi'
 //include ':navi'
 include ':panorama'
 //include ':ar'
-//include ':utils'
+include ':clusterutil'
 
 include ':MapDemo'
 //include ':BikeNaviDemo'
