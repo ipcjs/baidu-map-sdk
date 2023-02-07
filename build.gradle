@@ -29,7 +29,11 @@ ext {
 
 // 复制下载的so文件到module目录中去
 task copySoFilesToModules {
-    final sourceRootDir = file('../BaiduLBS_AndroidSDK/BaiduLBS_AndroidSDK_Lib_GP_with_indoor/')
+    final sourceRootDirs = [
+            file('../BaiduLBS_AndroidSDK/BaiduLBS_AndroidSDK_Lib_GP_map_full/'),
+            file('../BaiduLBS_AndroidSDK/BaiduLBS_AndroidSDK_Lib_GP_with_indoor/'),
+    ]
+
     final abiList = ['armeabi', 'x86', 'arm64-v8a', 'armeabi-v7a', 'x86_64']
     final moduleFiles = [
             'base'           : [
@@ -45,29 +49,47 @@ task copySoFilesToModules {
             ],
             'location-indoor': [
                     'libindoor.so',
+            ],
+            'bikenavi'       : [
+                    'libBaiduMapSDK_map_for_bikenavi_v7_5_5.so',
             ]
     ]
 
-    moduleFiles.each { module, files ->
-        abiList.each { abi ->
-            final sourceDir = new File(sourceRootDir, "libs/$abi/")
-            final targetDir = new File(module, "libs/$abi/")
-            // 清空并重建目标目录
-            targetDir.deleteDir()
-            targetDir.mkdirs()
+    final copyFile = { File source, File target ->
+        logger.info("\t$source => $target")
+        java.nio.file.Files.copy(source.toPath(), target.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+    }
 
-            files.each { fileName ->
-                final source = new File(sourceDir, fileName)
-                final target = new File(targetDir, fileName)
+    sourceRootDirs.each { sourceRootDir ->
+        moduleFiles.each { module, files ->
+            final moduleLibsDir = new File(module, "libs")
+            def moduleLibsDirRecreated = false
+            abiList.each { abi ->
+                final sourceDir = new File(sourceRootDir, "libs/$abi/")
+                final targetDir = new File(moduleLibsDir, abi)
+                files.each { fileName ->
+                    final source = new File(sourceDir, fileName)
+                    final target = new File(targetDir, fileName)
 
-                if (source.exists()) {
-                    logger.info("$source => $target")
-                    java.nio.file.Files.copy(source.toPath(), target.toPath())
-                } else {
-                    logger.warn("$source not exist.")
+                    if (source.exists()) {
+                        if (!moduleLibsDirRecreated) {
+                            logger.quiet("process ${sourceRootDir.name} => $module")
+                            // 清空module的libs目录
+                            moduleLibsDir.deleteDir()
+                            copyFile(
+                                    new File(sourceRootDir, 'readme.txt'),
+                                    new File(module, 'readme.txt'),
+                            )
+                            moduleLibsDirRecreated = true
+                        }
+                        if (!targetDir.exists() && !targetDir.mkdirs()) {
+                            throw new IOException("Create $targetDir failed.")
+                        }
+                        copyFile(source, target)
+                    }
                 }
-            }
 
+            }
         }
     }
 }
