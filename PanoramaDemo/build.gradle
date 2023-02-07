@@ -1,6 +1,17 @@
 apply plugin: 'com.android.application'
 
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+
 dependencies {
+//    implementation files('libs/BaiduLBS_Android.jar')
+//    implementation files('libs/BaiduLBS_aar_android.aar')
+//    implementation(name: 'BaiduLBS_aar_android', ext: 'aar')
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation project(':panorama')
 }
@@ -20,8 +31,10 @@ android {
 
     defaultConfig {
         applicationId "com.baidu.lbsapi.panodemo"
-        minSdkVersion 14
-        targetSdkVersion rootProject.targetSdkVersion
+        minSdkVersion 15
+        // 使用老版SDK, 新版SDK会报运行时错误
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 19 // rootProject.targetSdkVersion
     }
 
     sourceSets {
