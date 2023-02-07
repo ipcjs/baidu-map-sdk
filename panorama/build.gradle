@@ -28,5 +28,6 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
+    api files('libs/BaiduPanoSDK.aar')
+    // api fileTree(dir: 'libs', include: ['*.jar'])
 }

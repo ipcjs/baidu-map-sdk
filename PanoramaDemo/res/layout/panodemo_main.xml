@@ -50,6 +50,7 @@
             android:textColor="#000000"
             android:textSize="16sp" />
 
+
         <Button
             android:id="@+id/panodemo_main_btn_showarrow"
             android:layout_width="wrap_content"
@@ -95,6 +96,7 @@
             android:text="隐藏内景相册"
             android:textColor="#000000"
             android:textSize="16sp" />
+
 
         <LinearLayout
             android:id="@+id/seekpitch_ly"

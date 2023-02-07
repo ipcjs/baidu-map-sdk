@@ -52,31 +52,20 @@ public class PanoDemoMain extends Activity {
     private boolean isAddTextMarker = false;
     private boolean isShowArrow = false;
     private boolean isShowAblum = true;
+    private PanoDemoApplication panoDemoApplication;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        // 先初始化BMapManager
-        initBMapManager();
         setContentView(R.layout.panodemo_main);
-
         initView();
-
         Intent intent = getIntent();
         if (intent != null) {
             testPanoByType(intent.getIntExtra("type", -1));
         }
     }
 
-    private void initBMapManager() {
-        PanoDemoApplication app = (PanoDemoApplication) this.getApplication();
-        if (app.mBMapManager == null) {
-            app.mBMapManager = new BMapManager(app);
-            app.mBMapManager.init(new PanoDemoApplication.MyGeneralListener());
-        }
-    }
 
     private void initView() {
         textTitle = (TextView) findViewById(R.id.panodemo_main_title);
@@ -118,6 +107,7 @@ public class PanoDemoMain extends Activity {
                 isAddTextMarker = !isAddTextMarker;
             }
         });
+
 
         seekPitchLayout = findViewById(R.id.seekpitch_ly);
         seekHeadingLayout = findViewById(R.id.seekheading_ly);
@@ -234,41 +224,98 @@ public class PanoDemoMain extends Activity {
             mPanoView.setPanorama(pid);
         } else if (type == PanoDemoActivity.WGS84) {
             textTitle.setText(R.string.demo_desc_wgs84);
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle);
             double lat = 39.906283536127169;
             double lon = 116.39129554889048;
             mPanoView.setPanorama(lon, lat, PanoramaView.COORDTYPE_WGS84);
         } else if (type == PanoDemoActivity.GCJ02) {
             textTitle.setText(R.string.demo_desc_gcj02);
-            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionHigh);
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle);
             double lat = 39.907687;
             double lon = 116.397539;
             mPanoView.setPanorama(lon, lat, PanoramaView.COORDTYPE_GCJ02);
         } else if (type == PanoDemoActivity.GEO) {
             textTitle.setText(R.string.demo_desc_geo);
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle);
             double lat = 39.91403075654526;
             double lon = 116.40391285827147;
             mPanoView.setPanorama(lon, lat, PanoramaView.COORDTYPE_BD09LL);
         } else if (type == PanoDemoActivity.MERCATOR) {
             textTitle.setText(R.string.demo_desc_mercator);
-
-            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionHigh);
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle);
             int mcX = 12958165;
             int mcY = 4825783;
             mPanoView.setPanorama(mcX, mcY, PanoramaView.COORDTYPE_BD09MC);
         } else if (type == PanoDemoActivity.UID_STREET) {
             // 默认相册
-            IndoorAlbumPlugin.getInstance().init();
+            IndoorAlbumPlugin.getInstance().init(new IndoorAlbumCallback() {
 
+                @Override
+                public View loadAlbumView(PanoramaView panoramaView, EntryInfo info) {
+                    if (panoramaView != null && info != null) {
+                        View albumView = LayoutInflater.from(panoramaView.getContext())
+                                .inflate(R.layout.baidupano_photoalbum_container, null);
+                        if (albumView != null) {
+                            AlbumContainer mAlbumContainer =
+                                    (AlbumContainer) albumView.findViewById(R.id.page_pano_album_view);
+                            TextView mTvAddress = (TextView) albumView.findViewById(R.id.page_pano_album_address);
+                            mAlbumContainer.setControlView(panoramaView, mTvAddress);
+                        }
+                        LayoutParams lp = (LayoutParams) albumView.getLayoutParams();
+                        if (lp == null) {
+                            lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                        }
+                        lp.gravity = Gravity.BOTTOM;
+                        albumView.setLayoutParams(lp);
+                        AlbumContainer albumContainer =
+                                (AlbumContainer) albumView.findViewById(R.id.page_pano_album_view);
+                        albumContainer.startLoad(panoramaView.getContext(), info);
+                        return albumView;
+                    } else {
+                        return null;
+                    }
+                }
+            });
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle);
             textTitle.setText(R.string.demo_desc_uid_street);
-
             mPanoView.setPanoramaZoomLevel(5);
             mPanoView.setArrowTextureByUrl("http://d.lanrentuku.com/down/png/0907/system-cd-disk/arrow-up.png");
-            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle);
             String uid = "7aea43b75f0ee3e17c29bd71";
             mPanoView.setPanoramaByUid(uid, PanoramaView.PANOTYPE_STREET);
         } else if (type == PanoDemoActivity.UID_INTERIOR) {
             // 默认相册
-            IndoorAlbumPlugin.getInstance().init();
+            IndoorAlbumPlugin.getInstance().init(new IndoorAlbumCallback() {
+
+                @Override
+                public View loadAlbumView(PanoramaView panoramaView, EntryInfo info) {
+                    if (panoramaView != null && info != null) {
+                        View albumView = LayoutInflater.from(panoramaView.getContext())
+                                .inflate(R.layout.baidupano_photoalbum_container, null);
+                        if (albumView != null) {
+                            AlbumContainer mAlbumContainer =
+                                    (AlbumContainer) albumView.findViewById(R.id.page_pano_album_view);
+                            TextView mTvAddress = (TextView) albumView.findViewById(R.id.page_pano_album_address);
+                            mAlbumContainer.setControlView(panoramaView, mTvAddress);
+                        }
+                        LayoutParams lp = (LayoutParams) albumView.getLayoutParams();
+                        if (lp == null) {
+                            lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                        }
+                        lp.gravity = Gravity.BOTTOM;
+                        albumView.setLayoutParams(lp);
+                        AlbumContainer albumContainer =
+                                (AlbumContainer) albumView.findViewById(R.id.page_pano_album_view);
+                        albumContainer.startLoad(panoramaView.getContext(), info);
+                        return albumView;
+                    } else {
+                        return null;
+                    }
+                }
+            });
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionHigh); // 设置清晰度
+            IndoorAlbumCallback.EntryInfo info = new IndoorAlbumCallback.EntryInfo();
+            info.setEnterPid("0900220000141205144547300IN");
+            IndoorAlbumPlugin.getInstance().loadAlbumView(mPanoView,info);
 
             textTitle.setText(R.string.demo_desc_uid_interior);
             showIndoorAblumLayout();
@@ -323,12 +370,12 @@ public class PanoDemoMain extends Activity {
             textTitle.setText(R.string.demo_desc_uid_street_customalbum);
 
             mPanoView.setPanoramaZoomLevel(5);
-            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle);
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionHigh);
             String uid = "7aea43b75f0ee3e17c29bd71";
             mPanoView.setPanoramaByUid(uid, PanoramaView.PANOTYPE_STREET);
         } else if (type == PanoDemoActivity.MARKER) {
             textTitle.setText(R.string.demo_desc_marker);
-
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle); // 设置清晰度
             showMarkerButton();
             mPanoView.setPanorama("0900220001150514054806738T5");
             mPanoView.setShowTopoLink(false);
@@ -338,7 +385,7 @@ public class PanoDemoMain extends Activity {
             showSeekLayout();
             showOtherLayout();
 
-            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionHigh);
+            mPanoView.setPanoramaImageLevel(PanoramaView.ImageDefinition.ImageDefinitionMiddle);
             String pid = "0900220001150514054806738T5";
             mPanoView.setPanorama(pid);
 
@@ -493,7 +540,7 @@ public class PanoDemoMain extends Activity {
         // 天安门东北方向
         marker2 = new ImageMarker();
         marker2.setMarkerPosition(new Point(116.427116, 39.929718));
-        marker2.setMarker(getResources().getDrawable(R.drawable.icon_markb));
+        marker2.setMarker("https://www.baidu.com/img/baidu_resultlogo@2.png");
         marker2.setMarkerHeight(7);
         marker2.setOnTabMarkListener(new OnTabMarkListener() {
 
