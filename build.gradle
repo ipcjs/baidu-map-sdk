@@ -28,7 +28,7 @@ ext {
 }
 
 // 复制下载的so文件到module目录中去
-task copySoFilesToModules {
+task copySoFilesToModules << {
     final sourceRootDirs = [
             file('../BaiduLBS_AndroidSDK/BaiduLBS_AndroidSDK_Lib_GP_map_full/'),
             file('../BaiduLBS_AndroidSDK/BaiduLBS_AndroidSDK_Lib_GP_with_indoor/'),
