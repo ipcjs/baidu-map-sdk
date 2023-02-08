@@ -44,6 +44,5 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':location-indoor')
-    // TODO: LocDemo用的是7.5.2的地图, map是7.5.5的so, 不匹配, 故当前LocDemo中依然包含了7.5.2的so, 需要等LocDemo升级后移除
     implementation project(':map')
 }

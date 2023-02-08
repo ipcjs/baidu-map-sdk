@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
 
 import com.baidu.baidulocationdemo.R;
 import com.baidu.location.LocationClient;
-import com.baidu.location.service.LocationService;
-import com.baidu.location.service.Utils;
+import com.baidu.location.demo.service.LocationService;
+import com.baidu.location.demo.service.Utils;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 
@@ -34,7 +34,6 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;

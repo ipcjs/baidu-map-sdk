@@ -12,7 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.baidu.baidulocationdemo.R;
-import com.baidu.location.service.LocationService;
+import com.baidu.location.demo.service.LocationService;
 
 /**
  * H5 辅助定位功能

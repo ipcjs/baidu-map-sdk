@@ -2,7 +2,6 @@ package com.baidu.location.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,7 +10,7 @@ import com.baidu.baidulocationdemo.R;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClientOption;
-import com.baidu.location.service.LocationService;
+import com.baidu.location.demo.service.LocationService;
 
 /**
  * 签到场景示例demo

@@ -1,7 +1,7 @@
 package com.baidu.location.demo;
 
 
-import com.baidu.location.service.LocationService;
+import com.baidu.location.demo.service.LocationService;
 
 import android.app.Application;
 import android.app.Service;

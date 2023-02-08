@@ -11,7 +11,7 @@ import android.widget.RadioGroup;
 import com.baidu.baidulocationdemo.R;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
-import com.baidu.location.service.LocationService;
+import com.baidu.location.demo.service.LocationService;
 
 /***
  * 展示定位sdk自定义定位模式，注意！设置setOpenAutoNotifyMode后,setScanSpan会失效，回调由setOpenAutoNotifyMode内设置的数值决定

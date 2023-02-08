@@ -5,8 +5,8 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
 import com.baidu.location.PoiRegion;
-import com.baidu.location.service.LocationService;
-import com.baidu.location.service.Utils;
+import com.baidu.location.demo.service.LocationService;
+import com.baidu.location.demo.service.Utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
