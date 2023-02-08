@@ -34,12 +34,12 @@ import android.widget.Button;
  * 
  */
 public class LocationFilter extends Activity {
+
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
 	private Button reset;
 	private LocationService locService;
 	private LinkedList<LocationEntity> locationList = new LinkedList<LocationEntity>(); // 存放历史定位结果的链表，最大存放当前结果的前5次定位结果
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +127,6 @@ public class LocationFilter extends Activity {
 			newLocation.location = location;
 			newLocation.time = System.currentTimeMillis();
 			locationList.add(newLocation);
-
 		}
 		return locData;
 	}
@@ -196,7 +195,6 @@ public class LocationFilter extends Activity {
 		super.onPause();
 		// 在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
 		mMapView.onPause();
-
 	}
 
 	/**

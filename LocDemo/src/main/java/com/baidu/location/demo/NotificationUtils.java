@@ -20,7 +20,6 @@ public class NotificationUtils extends ContextWrapper {
     }
 
     public void createChannels() {
-
         // create android channel
         NotificationChannel androidChannel = new NotificationChannel(ANDROID_CHANNEL_ID,
                 ANDROID_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
@@ -34,7 +33,6 @@ public class NotificationUtils extends ContextWrapper {
         androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
         getManager().createNotificationChannel(androidChannel);
-
     }
 
     private NotificationManager getManager() {

@@ -26,7 +26,6 @@ public class LocationAutoNotify extends Activity{
 	private LocationClientOption mOption;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.autonotifyconfig);
 		selectLocMode = (RadioGroup)findViewById(R.id.autonotify_selectMode);
@@ -40,13 +39,11 @@ public class LocationAutoNotify extends Activity{
 	}
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		startLoc.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				int setFrequence = 60*1000;
 				int	setDistance = 100;
 				int setSensitivity = LocationClientOption.LOC_SENSITIVITY_HIGHT;
@@ -85,8 +82,6 @@ public class LocationAutoNotify extends Activity{
 				locIntent.putExtra("from", 1);
 				LocationAutoNotify.this.startActivity(locIntent);
 			}
-			
 		});
 	}
-	
 }

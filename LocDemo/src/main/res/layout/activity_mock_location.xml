@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_add_mock_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_lat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="请输入纬度" />
+
+            <EditText
+                android:id="@+id/et_lng"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="请输入经度" />
+
+            <EditText
+                android:id="@+id/et_alt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="请输入高度" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请先添加模拟位置数据,然后启动定位,最后开始仿真"
+            android:textColor="#FF0000"
+            android:layout_marginTop="10dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/btn_remove"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="删除模拟位置数据" />
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="添加模拟位置数据" />
+
+        <Button
+            android:id="@+id/btn_switch_loc"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="启动定位" />
+
+        <Button
+            android:id="@+id/btn_switch_mock"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="开始仿真" />
+    </LinearLayout>
+</RelativeLayout>

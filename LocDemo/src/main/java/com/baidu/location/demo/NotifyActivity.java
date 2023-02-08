@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,20 +39,26 @@ public class NotifyActivity extends Activity{
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
 
         startNotify = (Button)findViewById(R.id.notifystart);
-        mLocationClient  = new LocationClient(this);
-        mLocationClient.registerLocationListener(listener);
+        try {
+            mLocationClient  = new LocationClient(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mNotifyLister = new NotifyLister();
-        mLocationClient.registerNotify(mNotifyLister);
+        if (mLocationClient != null) {
+            mLocationClient.registerLocationListener(listener);
+            mLocationClient.registerNotify(mNotifyLister);
+        }
         startNotify.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                if(startNotify.getText().toString().equals("开启位置提醒")){
+                if((mLocationClient != null) && startNotify.getText().toString().equals("开启位置提醒")){
                     mLocationClient.start();
                     startNotify.setText("关闭位置提醒");
                 }else{
-                    if(mNotifyLister!=null){
+                    if((mLocationClient != null) && (mNotifyLister != null)){
                         mLocationClient.removeNotifyEvent(mNotifyLister);
                         startNotify.setText("开启位置提醒");
                     }
@@ -65,17 +72,21 @@ public class NotifyActivity extends Activity{
     protected void onStop() {
         // TODO Auto-generated method stub
         super.onStop();
-        mLocationClient.removeNotifyEvent(mNotifyLister);
-        mLocationClient.unRegisterLocationListener(listener);
-        mLocationClient.stop();
+        if (mLocationClient != null) {
+            mLocationClient.removeNotifyEvent(mNotifyLister);
+            mLocationClient.unRegisterLocationListener(listener);
+            mLocationClient.stop();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLocationClient.removeNotifyEvent(mNotifyLister);
-        mLocationClient.unRegisterLocationListener(listener);
-        mLocationClient.stop();
+        if (mLocationClient != null) {
+            mLocationClient.removeNotifyEvent(mNotifyLister);
+            mLocationClient.unRegisterLocationListener(listener);
+            mLocationClient.stop();
+        }
     }
 
     private Handler notifyHandler = new Handler(){
@@ -84,10 +95,12 @@ public class NotifyActivity extends Activity{
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             super.handleMessage(msg);
-            mNotifyLister.SetNotifyLocation(latitude,longtitude, 3000,mLocationClient.getLocOption().getCoorType());//4个参数代表要位置提醒的点的坐标，具体含义依次为：纬度，经度，距离范围，坐标系类型(gcj02,gps,bd09,bd09ll)
+            if (mLocationClient != null) {
+                mNotifyLister.SetNotifyLocation(latitude, longtitude, 3000, mLocationClient.getLocOption().getCoorType());//4个参数代表要位置提醒的点的坐标，具体含义依次为：纬度，经度，距离范围，坐标系类型(gcj02,gps,bd09,bd09ll)
+            }
         }
-
     };
+
     public class NotiftLocationListener extends BDAbstractLocationListener {
 
         @Override
@@ -97,8 +110,8 @@ public class NotifyActivity extends Activity{
             latitude = location.getLatitude();
             notifyHandler.sendEmptyMessage(0);
         }
-
     }
+
     public class NotifyLister extends BDNotifyListener{
         public void onNotify(BDLocation mlocation, float distance){
             mVibrator.vibrate(1000);//振动提醒已到设定位置附近

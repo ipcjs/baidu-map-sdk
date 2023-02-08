@@ -54,6 +54,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="仅设备" />
+
+                        <RadioButton
+                            android:id="@+id/radio_fuzzy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="模糊" />
                     </RadioGroup>
                 </LinearLayout>
 
@@ -103,6 +109,39 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2.88"
                 android:text=" " />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/TextView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="首次定位类型"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <RadioGroup
+                    android:id="@+id/selectfirstloctype"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" >
+
+                    <RadioButton
+                        android:id="@+id/speed_in_first_loc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="速度优先" />
+
+                    <RadioButton
+                        android:id="@+id/accuracy_in_first_loc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="准确性优先" />
+                </RadioGroup>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="278dp"

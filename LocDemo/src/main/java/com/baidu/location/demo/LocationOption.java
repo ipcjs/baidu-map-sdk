@@ -23,7 +23,8 @@ import android.widget.RadioGroup;
  *
  */
 public class LocationOption extends Activity{
-	private RadioGroup selectLocMode,selectcoord;
+
+	private RadioGroup selectLocMode,selectcoord,selectFirstLocType;
 	private EditText scanSpan;
 	private CheckBox geolocation,poi,describe,director;
 	private LocationClientOption option;
@@ -36,6 +37,7 @@ public class LocationOption extends Activity{
 		setContentView(R.layout.locationconfig);
 		selectLocMode = (RadioGroup)findViewById(R.id.selectMode);
 		selectcoord = (RadioGroup)findViewById(R.id.selectCoordinates);
+		selectFirstLocType = (RadioGroup)findViewById(R.id.selectfirstloctype);
 		scanSpan = (EditText)findViewById(R.id.frequence);
 		geolocation = (CheckBox)findViewById(R.id.geolocation);
 		poi = (CheckBox)findViewById(R.id.poiCheckBox);
@@ -65,6 +67,9 @@ public class LocationOption extends Activity{
 				case R.id.radio_device:
 					option.setLocationMode(LocationMode.Device_Sensors);
 					break;
+				case R.id.radio_fuzzy:
+					option.setLocationMode(LocationMode.Fuzzy_Locating);
+					break;
 				default:
 					break;
 				}
@@ -77,6 +82,16 @@ public class LocationOption extends Activity{
 					break;
 				case R.id.radio_bd09:
 					option.setCoorType(Utils.CoorType_BD09MC);
+					break;
+				default:
+					break;
+				}
+				switch (selectFirstLocType.getCheckedRadioButtonId()) {
+				case R.id.speed_in_first_loc:
+					option.setFirstLocType(LocationClientOption.FirstLocType.SPEED_IN_FIRST_LOC);
+					break;
+				case R.id.accuracy_in_first_loc:
+					option.setFirstLocType(LocationClientOption.FirstLocType.ACCURACY_IN_FIRST_LOC);
 					break;
 				default:
 					break;
@@ -126,8 +141,6 @@ public class LocationOption extends Activity{
 				locIntent.putExtra("from", 1);
 				LocationOption.this.startActivity(locIntent);
 			}
-			
 		});
 	}
-	
 }

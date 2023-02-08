@@ -23,7 +23,6 @@ public class IsHotWifiActivity extends Activity{
 	private TextView res;
 	private Button startBtn;
 	private MyLocationListener listener;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +35,7 @@ public class IsHotWifiActivity extends Activity{
 		listener = new MyLocationListener();
 		locService.registerListener(listener);
 		locService.start();
-		
-		
+
 		startBtn.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -46,12 +44,8 @@ public class IsHotWifiActivity extends Activity{
 				boolean b = locService.requestHotSpotState();
 				res.setText("");
 			}
-			
 		});
-
 	}
-	
-
 
 	/***
 	 * 定位结果回调，在此方法中处理定位结果
@@ -78,7 +72,6 @@ public class IsHotWifiActivity extends Activity{
 		public void onReceiveLocation(BDLocation arg0) {
 			// TODO Auto-generated method stub
 		}
-		
 	}
 	
 	

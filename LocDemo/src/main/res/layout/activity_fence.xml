@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#999"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/guide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FF0000"
+        android:text="请在地图中选择围栏中心点"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:textColor="#000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="围栏半径:"/>
+
+            <EditText
+                android:id="@+id/radius"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:text="500"
+                android:inputType="numberDecimal">
+            </EditText>
+            <Button
+                android:id="@+id/fence"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:onClick="addCircleNotifyOnClick"
+                android:layout_weight="1.2"
+                android:text="添加围栏"
+                android:textSize="16dp" />
+            <Button
+                android:id="@+id/start_notify"
+                android:layout_width="0dp"
+                android:layout_weight="1.2"
+                android:layout_height="wrap_content"
+                android:onClick="starNotifyOnClick"
+                android:text="开启提醒"
+                android:textSize="16dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>

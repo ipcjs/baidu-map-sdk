@@ -15,27 +15,32 @@
     <string name="hight_accuracy_desc">高精度定位模式下，会同时使用GPS、Wifi和基站定位，返回的是当前条件下精度最好的定位结果</string>
     <string name="saving_battery_desc">低功耗定位模式下，仅使用网络定位即Wifi和基站定位，返回的是当前条件下精度最好的网络定位结果</string>
     <string name="device_sensor_desc">仅用设备定位模式下，只使用用户的GPS进行定位。这个模式下，由于GPS芯片锁定需要时间，首次定位速度会需要一定的时间</string>
-    <string name="error_code_detail">61 ： GPS定位结果\n
-		62 ： 扫描整合定位依据失败。此时定位结果无效。\n
-		63 ： 网络异常，没有成功向服务器发起请求。此时定位结果无效。\n
-		65 ： 定位缓存的结果。\n
-		66 ： 离线定位结果。通过requestOfflineLocaiton调用时对应的返回结果\n
-		67 ： 离线定位失败。通过requestOfflineLocaiton调用时对应的返回结果\n
-		68 ： 网络连接失败时，查找本地离线定位时对应的返回结果\n
-		161： 表示网络定位结果\n
-		162~167： 服务端定位失败\n
-		502：key参数错误\n
-		505：key不存在或者非法\n
-		601：key服务被开发者自己禁用\n
-		602：key mcode不匹配\n
-		501～700：key验证失败\n</string>
+    <string name="demo_title_signin">签到场景--SignInSceneActivity</string>
+    <string name="demo_desc_signin">签到场景 只进行一次定位返回最接近真实位置的定位结果（定位速度可能会延迟1-3s）</string>
+    <string name="demo_title_sport">出行场景--SportSceneActivity</string>
+    <string name="demo_desc_sport">出行场景 高精度连续定位，适用于用户内外切换的场景，卫星定位和网络定位相互切换，卫星定位成功之后网络定位不再返回，卫星信号断开之后一段时间才会返回网络结果）</string>
+    <string name="demo_title_transport">运动场景--TransportSceneActivity</string>
+    <string name="demo_desc_transport">运动场景 高精度连续定位，适用于用户内外切换的场景，卫星定位和网络定位相互切换，卫星定位成功之后网络定位不再返回，卫星信号断开之后一段时间才会返回网络结果）</string>
+    <string name="error_code_detail">
+        61 ： GPS定位结果，GPS定位成功。\n
+		62 ： 定位失败，无法获取有效定位依据，请检查运营商网络或者WiFi网络是否正常开启，尝试重新请求定位。\n
+		63 ： 网络异常，没有成功向服务器发起请求，请确认当前测试手机网络是否通畅，尝试重新请求定位。\n
+		66 ： 离线定位结果，通过requestOfflineLocaiton调用时对应的返回结果。\n
+		67 ： 离线定位失败，通过requestOfflineLocaiton调用时对应的返回结果。\n
+		161： 网络定位结果，网络定位成功\n
+		162： 请求串密文解析失败，一般是由于客户端SO文件加载失败造成，请严格参照开发指南或demo开发，放入对应SO文件。\n
+        167： 服务端定位失败，请您检查是否禁用获取位置信息权限，尝试重新请求定位\n
+        505： key不存在或者非法，请按照说明文档重新申请AK \n
+    </string>
     <string name="qa_callback">问题反馈</string>
     <string name="qa_format">邮件格式格式：\n
-		1、手机标识（移动联通IMEI，电信MEID）\n
-		2、问题发生时间\n
-		3、定位类型：失败（给出返回码），或者不准（给出真实位置）等\n
-		4、具体描述：细节描述，可以给出问题发生的频率或者APP名称，sdk版本等，也可以加上附件如日志，贴图等\n
+		1、问题描述：问题描述\n
+		2、定位设备CUID：获取方式：打开百度地图，我的->设置->关于，长按关于，获得cuid\n
+		3、定位精确时间：格式如：2019年01月01日00:00:00\n
+        4、我定位原始点（错误点）坐标：说明坐标及坐标系类型（BD坐标系、GCJ02、WGS84）\n
+        5、定位纠正点（正确点）坐标：说明坐标及坐标系类型（BD坐标系、GCJ02、WGS84）\n
+		6、具体描述：细节描述，室内 还是 室外，如在室内场景可标注楼宇名字和定位楼层，可以给出问题发生的频率或者APP名称，sdk版本等，也可以加上附件如日志，贴图等\n
         </string>
-    <string name="qa_callback_mail">反馈邮箱:loc-bugs@baidu.com</string>
-
+    <string name="qa_callback_mail">反馈邮箱:ext_map_vip@baidu.com@baidu.com</string>
+    <string name="action_background">根据相关监管要求，在静默状态下或在后台运行时，如非服务所必需或无合理应用场景，不得收集用户信息</string>
 </resources>
