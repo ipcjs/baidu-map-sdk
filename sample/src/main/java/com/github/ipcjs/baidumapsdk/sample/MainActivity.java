@@ -1,8 +1,14 @@
 package com.github.ipcjs.baidumapsdk.sample;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,25 +27,63 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
     public static final int REQUEST_CODE_LOCATION = 1;
+    public static final String KEY_AGREE_PRIVACY = "agreePrivacy";
     private BaiduMap mBaiduMap;
+    @Nullable
     private LocationClient mLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());
+        Context context = this;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        if (prefs.getBoolean("agreePrivacy", false)) {
+            initSDK(true);
+            initView();
+        } else {
+            new AlertDialog.Builder(context)
+                    .setTitle("是否同意隐式协议?")
+                    .setPositiveButton("同意", (dialog, which) -> {
+                        prefs.edit().putBoolean(KEY_AGREE_PRIVACY, true).apply();
+                        initSDK(true);
+                        initView();
+                    })
+                    .setNegativeButton("不同意", (dialog, which) -> initSDK(false))
+                    .show();
+        }
+    }
+
+
+    private void initView() {
         setContentView(R.layout.activity_main);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         mBaiduMap = mapFragment.getBaiduMap();
         mBaiduMap.setMyLocationEnabled(true);
-        mLocationClient = new LocationClient(getApplicationContext());
-        mLocationClient.setLocOption(createLocationClientOption());
-        mLocationClient.registerLocationListener(new MyLocationListener());
+    }
+
+    private void initSDK(boolean agreePrivacy) {
+        LocationClient.setAgreePrivacy(agreePrivacy);
+        SDKInitializer.setAgreePrivacy(getApplicationContext(), agreePrivacy);
+        try {
+            // 不同意时, 这两个方法会抛异常...
+            SDKInitializer.initialize(getApplicationContext());
+            mLocationClient = new LocationClient(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (mLocationClient != null) {
+            mLocationClient.setLocOption(createLocationClientOption());
+            mLocationClient.registerLocationListener(new MyLocationListener());
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mLocationClient == null) {
+            return;
+        }
         if (PermissionUtil.checkSelfPermission(this, PERMISSIONS_LOCATION)) {
             mLocationClient.start();
             log("granted");
@@ -74,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (mLocationClient == null) {
+            return;
+        }
         if (mLocationClient.isStarted()) {
             mLocationClient.stop();
         }
@@ -192,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
         /**
          * 回调定位诊断信息，开发者可以根据相关信息解决定位遇到的一些问题
          * 自动回调，相同的diagnosticType只会回调一次
+         *
          * @param locType           当前定位类型
          * @param diagnosticType    诊断类型（1~9）
          * @param diagnosticMessage 具体的诊断信息释义
