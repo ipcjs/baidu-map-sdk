@@ -28,6 +28,6 @@ android {
 }
 
 dependencies {
-    api files('libs/BaiduPanoSDK.aar')
+    api project(':panorama-aar')
     // api fileTree(dir: 'libs', include: ['*.jar'])
 }

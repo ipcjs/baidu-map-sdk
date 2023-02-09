@@ -55,20 +55,20 @@ so文件和module的对应关系详见：[copySoFilesToModules](build.gradle#L31
 | v1.2.0   | g01_1.2.5 | --          | v7.3.0  | v4.5.2  | --      | --      | --        | 升级地图和定位                    |
 | v2.0.0   | g01_2.0.1 | --          | v7.6.0  | v5.2.1  | --      | v2.6.2  | v1.0.0    | 除navi外全面升级                  |
 | v2.1.0   | g01_2.1.1 | --          | v7.9.0  | v5.4.4  | --      | v2.8.5  | --        | 紧急升级g01相关的模块, 文档未升级 |
-| v3.0.0   | g01_3.0.0 | --          | v9.3.6  | v7.5.4  | 未维护  | v2.9.2  | 未维护    | 全面升级到国外版SDK               |
+| v3.0.2   | g01_3.0.2 | --          | v9.3.6  | v7.5.4  | 未维护  | v2.9.2  | 未维护    | 全面升级到国外版SDK               |
 
 ### 引入
 
 ```groovy
 dependencies {
     // 引入已有的组合module g01, 包含的模块详见: https://github.com/ipcjs/baidu-map-sdk/tree/g01
-    compile 'com.github.ipcjs:baidu-map-sdk:g01_3.0.0'
+    compile 'com.github.ipcjs:baidu-map-sdk:g01_3.0.2'
 
     // 引入另一个组合module g02, 包含的模块详见: https://github.com/ipcjs/baidu-map-sdk/tree/g02
     compile 'com.github.ipcjs:baidu-map-sdk:g02_1.1.1'
 
     // 分别引入库module, 注意: BaiduLBS_Android.jar文件需要自己去官网下载
-    def baiduMapSdkVersion = 'v3.0.0'
+    def baiduMapSdkVersion = 'v3.0.2'
     compile "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:base:${baiduMapSdkVersion}"
     compile "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"

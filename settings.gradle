@@ -6,6 +6,7 @@ include ':bikenavi'
 // TODO: 目前禁用掉了一些暂时未使用过的模块, 有时间再说更新的事(
 //include ':navi'
 include ':panorama'
+include ':panorama-aar'
 //include ':ar'
 include ':clusterutil'
 
