@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.baidu.lbsapi.panoramaview.PanoramaView;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -24,6 +25,8 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.SupportMapFragment;
 
 public class MainActivity extends AppCompatActivity {
+    // 检测是否导入了panorama包
+    private static final Class<PanoramaView> panoramaViewClass = PanoramaView.class;
 
     public static final String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
     public static final int REQUEST_CODE_LOCATION = 1;

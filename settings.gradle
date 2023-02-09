@@ -1,1 +1,10 @@
 include ':g01', ':sample'
+if (properties.get('depsType') == 'project') {
+    include ':location', ':map', 'panorama', 'panorama-aar', 'base'
+
+    project(':location').projectDir = file('../baidu-map-sdk/location')
+    project(':base').projectDir = file('../baidu-map-sdk/base')
+    project(':map').projectDir = file('../baidu-map-sdk/map')
+    project(':panorama').projectDir = file('../baidu-map-sdk/panorama')
+    project(':panorama-aar').projectDir = file('../baidu-map-sdk/panorama-aar')
+}
