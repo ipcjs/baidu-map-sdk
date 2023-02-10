@@ -89,7 +89,7 @@ dependencies {
 apply plugin: 'maven-publish'
 
 group = 'com.github.ipcjs.baidu-map-sdk'
-version = 'g01_3.0.4-SNAPSHOT'
+version = 'g01_3.0.5-SNAPSHOT'
 task javadocJar(type: Jar) {
     // 注意, 因为这几个目录本来是独立的javadoc文件, 像这样直接复制到一起后, 会导致一些文件被覆盖...
     from '../libs/doc/panorama', '../libs/doc/navi', '../libs/doc/location', '../libs/doc/map', '../libs/doc/ar'
@@ -105,7 +105,7 @@ afterEvaluate {
                 artifact javadocJar
             }
             chinaRelease(MavenPublication) {
-                from components.intlRelease
+                from components.chinaRelease
                 artifactId 'g01-china'
                 artifact javadocJar
             }
