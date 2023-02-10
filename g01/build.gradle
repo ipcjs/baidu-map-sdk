@@ -5,7 +5,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
