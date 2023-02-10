@@ -6,7 +6,7 @@ apply plugin: 'maven-publish'
 group = 'com.github.ipcjs.baidu-map-sdk'
 // 该module仅仅用来放aar文件, 使用时依赖的依然是panorama, 故这里使用的是`./readme.txt`中的版本号,
 // 和`../maven_push.gradle`中的版本号无关
-version = '2.9.2'
+version = '2.9.2-SNAPSHOT'
 
 configurations.maybeCreate('default')
 final publishArtifact = artifacts.add('default', file('BaiduPanoSDK.aar'))

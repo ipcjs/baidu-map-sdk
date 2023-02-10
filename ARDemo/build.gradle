@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId "sdk.cammer.common.baidu.map.android_mapcam_sdk"
-        minSdkVersion 14
+        minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
