@@ -5,7 +5,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 19
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -22,6 +22,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions 'country'
+    productFlavors {
+        china {
+            dimension 'country'
+        }
+        intl {
+            dimension 'country'
+        }
+    }
+
     sourceSets {
         main {
 //            manifest.srcFile 'AndroidManifest.xml'
@@ -30,29 +41,55 @@ android {
         }
     }
 }
-def baiduMapSdkVersion = 'v3.0.2'
+
+final mapVersion = '7.5.5'
+final locationVersion = '9.3.7'
+final panoramaVersion = '2.9.2'
+
+def baiduMapSdkVersion = 'v3.0.3'
 def depsType = rootProject.properties.get('depsType')
 if (depsType == 'mavenLocal') baiduMapSdkVersion += '-SNAPSHOT'
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
+    // api fileTree(dir: 'libs', include: ['*.jar'])
+    intlApi files('libs/BaiduLBS_Android.jar')
 
     if (depsType == 'project') {
-        api project(':location')
-        api project(':map')
-        api project(':panorama')
+        intlApi project(':location')
+        intlApi project(':map')
+        intlApi project(':panorama')
     } else {
-        api "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
-        api "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
-        api "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
+        intlApi "com.github.ipcjs.baidu-map-sdk:location:${baiduMapSdkVersion}"
+        intlApi "com.github.ipcjs.baidu-map-sdk:map:${baiduMapSdkVersion}"
+        intlApi "com.github.ipcjs.baidu-map-sdk:panorama:${baiduMapSdkVersion}"
     }
+
+    // 地图组件
+    chinaApi "com.baidu.lbsyun:BaiduMapSDK_Map:$mapVersion"
+    // 检索组件
+    chinaApi "com.baidu.lbsyun:BaiduMapSDK_Search:$mapVersion"
+    // 工具组件
+    chinaApi "com.baidu.lbsyun:BaiduMapSDK_Util:$mapVersion"
+    // 步骑行组件
+    // chinaApi "com.baidu.lbsyun:BaiduMapSDK_Map-BWNavi:$mapVersion"
+    // 基础定位组件
+    chinaApi "com.baidu.lbsyun:BaiduMapSDK_Location:$locationVersion"
+    // 全量定位组件
+    // chinaApi "com.baidu.lbsyun:BaiduMapSDK_Location_All:$locationVersion"
+    // 驾车导航组件
+    // chinaApi "com.baidu.lbsyun:BaiduMapSDK_Map-Navi:$mapVersion"
+    // 驾车导航+步骑行导航
+    // chinaApi "com.baidu.lbsyun:BaiduMapSDK_Map-AllNavi:$mapVersion"
+    // TTS组件
+    // chinaApi 'com.baidu.lbsyun:NaviTts:3.2.8'
+    // 全景组件
+    chinaApi "com.baidu.lbsyun:BaiduMapSDK_Panorama:$panoramaVersion"
 }
 
 apply plugin: 'maven-publish'
 
 group = 'com.github.ipcjs'
-version = 'g01_3.0.2-SNAPSHOT'
-project.archivesBaseName = 'baidu-map-sdk'
+version = 'g01_3.0.3-SNAPSHOT'
 task javadocJar(type: Jar) {
     // 注意, 因为这几个目录本来是独立的javadoc文件, 像这样直接复制到一起后, 会导致一些文件被覆盖...
     from '../libs/doc/panorama', '../libs/doc/navi', '../libs/doc/location', '../libs/doc/map', '../libs/doc/ar'
@@ -62,8 +99,14 @@ task javadocJar(type: Jar) {
 afterEvaluate {
     publishing {
         publications {
-            release(MavenPublication) {
-                from components.release
+            intlRelease(MavenPublication) {
+                from components.intlRelease
+                artifactId 'baidu-map-sdk'
+                artifact javadocJar
+            }
+            chinaRelease(MavenPublication) {
+                from components.intlRelease
+                artifactId 'baidu-map-sdk-china'
                 artifact javadocJar
             }
         }

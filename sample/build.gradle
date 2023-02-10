@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.github.ipcjs.baidumapsdk.sample"
-        minSdkVersion 14
+        minSdkVersion 19 // 定位需要19+, 其他都是14+
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -20,6 +20,16 @@ android {
     signingConfigs {
         debug {
             storeFile file("debug.keystore")
+        }
+    }
+
+    flavorDimensions 'country'
+    productFlavors {
+        china {
+            dimension 'country'
+        }
+        intl {
+            dimension 'country'
         }
     }
 
